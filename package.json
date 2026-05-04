@@ -10,6 +10,7 @@
   "private": false,
   "scripts": {
     "dev": "bun run src/cli.ts",
+    "test": "bun test",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "generate:api": "bun run src/scripts/generate-api.ts",
     "build": "bun build src/cli.ts --outfile dist/jet.js --target node"

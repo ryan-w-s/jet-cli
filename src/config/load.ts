@@ -43,12 +43,7 @@ export async function loadRuntimeContext(
   };
 
   return {
-    config: compactConfig({
-      ...userConfig,
-      ...localConfig,
-      ...envConfig,
-      ...cliConfig,
-    }),
+    config: mergeConfigSources(userConfig, localConfig, envConfig, cliConfig),
     noInput: options.noInput ?? false,
   };
 }
@@ -97,7 +92,7 @@ function userConfigPath(): string {
   return join(configHome, "jet", "config.json");
 }
 
-function findUp(relativePath: string, start: string): string | null {
+export function findUp(relativePath: string, start: string): string | null {
   let current = resolve(start);
   const root = parse(current).root;
   while (true) {
@@ -112,15 +107,29 @@ function findUp(relativePath: string, start: string): string | null {
   }
 }
 
-function compactConfig(config: JetConfig): JetConfig {
+export function compactConfig(config: JetConfig): JetConfig {
   return Object.fromEntries(
     Object.entries(config).filter(([, value]) => value !== undefined && value !== ""),
   ) as JetConfig;
 }
 
-function parseOutput(value: string | undefined): JetConfig["output"] | undefined {
+export function parseOutput(value: string | undefined): JetConfig["output"] | undefined {
   if (value === "json" || value === "human") {
     return value;
   }
   return undefined;
+}
+
+export function mergeConfigSources(
+  userConfig: JetConfig,
+  localConfig: JetConfig,
+  envConfig: JetConfig,
+  cliConfig: JetConfig,
+): JetConfig {
+  return compactConfig({
+    ...userConfig,
+    ...localConfig,
+    ...envConfig,
+    ...cliConfig,
+  });
 }

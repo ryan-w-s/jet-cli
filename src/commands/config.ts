@@ -103,7 +103,7 @@ export function createContextCommand(getContext: () => Promise<RuntimeContext>):
     });
 }
 
-function normalizeConfigKey(key: string): keyof JetConfig {
+export function normalizeConfigKey(key: string): keyof JetConfig {
   const normalized = key.replace(/-([a-z])/g, (_, char: string) => char.toUpperCase());
   if (!CONFIG_KEYS.has(normalized as keyof JetConfig)) {
     throw new Error(`Unknown config key "${key}".`);

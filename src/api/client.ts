@@ -231,11 +231,11 @@ export class JetApi {
   }
 }
 
-function trimTrailingSlash(value: string): string {
+export function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, "");
 }
 
-function unwrap<T>(data: T | undefined, error: unknown, response: Response): T {
+export function unwrap<T>(data: T | undefined, error: unknown, response: Response): T {
   if (error !== undefined) {
     throw new JetApiError(apiErrorMessage(error, response), response.status, error);
   }
