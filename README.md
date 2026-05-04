@@ -1,15 +1,28 @@
-# jet-cli
+# JET CLI
 
-To install dependencies:
+Command line interface for Just Easy Tasks.
 
-```bash
+## Development
+
+```sh
 bun install
+bun run typecheck
+bun run src/cli.ts --help
 ```
 
-To run:
+Generate OpenAPI types from a running API:
 
-```bash
-bun run index.ts
+```sh
+JET_OPENAPI_URL=http://127.0.0.1:8000/api/openapi.json bun run generate:api
 ```
 
-This project was created using `bun init` in bun v1.3.13. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+## First Use
+
+```sh
+jet config set api-url http://127.0.0.1:8000
+jet config set api-key jet_your_secret_here
+jet use workspace acme
+jet use project JET
+jet task list
+jet task get JET-1
+```

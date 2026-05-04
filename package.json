@@ -1,15 +1,31 @@
 {
   "name": "jet-cli",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "version": "0.1.0",
+  "description": "Command line interface for Just Easy Tasks",
+  "bin": {
+    "jet": "./dist/jet.js"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "module": "src/cli.ts",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "dev": "bun run src/cli.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generate:api": "bun run src/scripts/generate-api.ts",
+    "build": "bun build src/cli.ts --outfile dist/jet.js --target node"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.6.0",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
-    "commander": "^14.0.3"
+    "commander": "^14.0.3",
+    "openapi-fetch": "^0.17.0"
   }
 }
