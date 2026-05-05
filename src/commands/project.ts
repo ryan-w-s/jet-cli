@@ -2,10 +2,16 @@ import { Command } from "commander";
 
 import { JetApi } from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
-import { printProjects } from "../output/human.js";
+import { printProjects, printRecordValue } from "../output/human.js";
 import { printJson } from "../output/json.js";
-import { requireWorkspace } from "../resolution/task-target.js";
-import { requireApiConfig } from "./shared.js";
+import { requireProject, requireWorkspace } from "../resolution/task-target.js";
+import {
+  compactObject,
+  confirmDestructiveAction,
+  printDeleted,
+  requireApiConfig,
+  type DestructiveOptions,
+} from "./shared.js";
 
 export function createProjectCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("project").description("Work with projects");
@@ -26,5 +32,102 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
       printProjects(projects);
     });
 
+  command
+    .command("get")
+    .description("Get a project")
+    .argument("[project]", "project key")
+    .argument("[workspace]", "workspace slug")
+    .action(async (project: string | undefined, workspace: string | undefined) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      const record = await api.getProject({
+        workspaceSlug: requireWorkspace(workspace ?? config.workspace),
+        projectKey: requireProject(project ?? config.project),
+      });
+      printValue(config.output, record, "No project found.");
+    });
+
+  command
+    .command("create")
+    .description("Create a project")
+    .argument("<key>")
+    .argument("<name>")
+    .argument("[workspace]", "workspace slug")
+    .option("--description <text>")
+    .action(
+      async (
+        key: string,
+        name: string,
+        workspace: string | undefined,
+        options: { description?: string },
+      ) => {
+        const { config } = await getContext();
+        const api = new JetApi(requireApiConfig(config));
+        const record = await api.createProject({
+          workspaceSlug: requireWorkspace(workspace ?? config.workspace),
+          body: { key, name, description: options.description },
+        });
+        printValue(config.output, record, "No project found.");
+      },
+    );
+
+  command
+    .command("update")
+    .description("Update a project")
+    .argument("[project]", "project key")
+    .argument("[workspace]", "workspace slug")
+    .option("--name <name>")
+    .option("--description <text>")
+    .action(
+      async (
+        project: string | undefined,
+        workspace: string | undefined,
+        options: { name?: string; description?: string },
+      ) => {
+        const { config } = await getContext();
+        const api = new JetApi(requireApiConfig(config));
+        const record = await api.updateProject({
+          workspaceSlug: requireWorkspace(workspace ?? config.workspace),
+          projectKey: requireProject(project ?? config.project),
+          body: compactObject({
+            name: options.name,
+            description: options.description,
+          }),
+        });
+        printValue(config.output, record, "No project found.");
+      },
+    );
+
+  command
+    .command("delete")
+    .description("Delete a project")
+    .argument("[project]", "project key")
+    .argument("[workspace]", "workspace slug")
+    .option("--force", "delete without prompting")
+    .action(
+      async (
+        project: string | undefined,
+        workspace: string | undefined,
+        options: DestructiveOptions,
+      ) => {
+        const context = await getContext();
+        const { config } = context;
+        const api = new JetApi(requireApiConfig(config));
+        const workspaceSlug = requireWorkspace(workspace ?? config.workspace);
+        const projectKey = requireProject(project ?? config.project);
+        await confirmDestructiveAction(
+          context,
+          options,
+          `Delete project ${projectKey} in workspace ${workspaceSlug}?`,
+        );
+        await api.deleteProject({ workspaceSlug, projectKey });
+        printDeleted(config, "project", projectKey);
+      },
+    );
+
   return command;
+}
+
+function printValue(output: string | undefined, record: unknown, emptyMessage: string): void {
+  printRecordValue(output, record, emptyMessage);
 }

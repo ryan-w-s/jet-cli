@@ -187,6 +187,20 @@ describe("resolveTaskTarget", () => {
         workspace: "acme",
       }),
     ).rejects.toThrow("Resolved task did not include a project key.");
+
+    await expect(
+      resolveTaskTarget({
+        api: makeApi({
+          resolveTask: async () => ({
+            status: "ambiguous",
+            task: null,
+            candidates: [],
+          }),
+        }),
+        target: "login",
+        workspace: "acme",
+      }),
+    ).rejects.toThrow("ambiguous result without candidates");
   });
 });
 

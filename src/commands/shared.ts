@@ -1,5 +1,5 @@
 import type { JetApiOptions } from "../api/client.js";
-import type { JetConfig } from "../config/load.js";
+import type { JetConfig, RuntimeContext } from "../config/load.js";
 import { CliUsageError } from "../resolution/task-target.js";
 
 export function requireApiConfig(config: JetConfig): JetApiOptions {
@@ -14,4 +14,60 @@ export function requireApiConfig(config: JetConfig): JetApiOptions {
     );
   }
   return { apiUrl: config.apiUrl, apiKey: config.apiKey };
+}
+
+export type DestructiveOptions = {
+  force?: boolean;
+};
+
+export async function confirmDestructiveAction(
+  context: RuntimeContext,
+  options: DestructiveOptions,
+  message: string,
+): Promise<void> {
+  if (options.force) {
+    return;
+  }
+  if (context.noInput) {
+    throw new CliUsageError(`${message} Re-run with --force to confirm.`);
+  }
+
+  const { createInterface } = await import("node:readline/promises");
+  const readline = createInterface({
+    input: process.stdin,
+    output: process.stderr,
+  });
+  try {
+    const answer = await readline.question(`${message} Type "yes" to continue: `);
+    if (answer.trim().toLowerCase() !== "yes") {
+      throw new CliUsageError("Operation cancelled.");
+    }
+  } finally {
+    readline.close();
+  }
+}
+
+export function compactObject<T extends Record<string, unknown>>(value: T): T {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entry]) => entry !== undefined),
+  ) as T;
+}
+
+export function parseJsonObject(value: string | undefined): Record<string, unknown> {
+  if (!value) {
+    return {};
+  }
+  const parsed = JSON.parse(value) as unknown;
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new CliUsageError("Expected a JSON object.");
+  }
+  return parsed as Record<string, unknown>;
+}
+
+export function printDeleted(config: JetConfig, resource: string, id: string): void {
+  if (config.output === "json") {
+    console.log(JSON.stringify({ deleted: true, resource, id }, null, 2));
+    return;
+  }
+  console.log(`Deleted ${resource} ${id}`);
 }

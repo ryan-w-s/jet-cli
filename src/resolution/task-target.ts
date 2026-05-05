@@ -47,10 +47,13 @@ export async function resolveTaskTarget(
     target: options.target,
     projectKey: options.project,
   });
-  if (result.status === "resolved" && result.task !== null) {
+  if (result.status === "resolved" && result.task !== null && result.task !== undefined) {
     return taskToCoordinates(workspaceSlug, result.task);
   }
   if (result.status === "ambiguous") {
+    if (!result.candidates || result.candidates.length === 0) {
+      throw new CliUsageError("Task resolver returned an ambiguous result without candidates.");
+    }
     throw new AmbiguousTaskError(options.target, result.candidates);
   }
   throw new CliUsageError(`No task found for "${options.target}".`);

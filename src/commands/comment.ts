@@ -2,10 +2,15 @@ import { Command } from "commander";
 
 import { JetApi } from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
-import { printComments } from "../output/human.js";
+import { printComments, printRecord } from "../output/human.js";
 import { printJson } from "../output/json.js";
 import { resolveTaskTarget } from "../resolution/task-target.js";
-import { requireApiConfig } from "./shared.js";
+import {
+  confirmDestructiveAction,
+  printDeleted,
+  requireApiConfig,
+  type DestructiveOptions,
+} from "./shared.js";
 
 export function createCommentCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("comment").description("Work with task comments");
@@ -52,6 +57,52 @@ export function createCommentCommand(getContext: () => Promise<RuntimeContext>):
       }
       console.log(comment.body);
     });
+
+  command
+    .command("update")
+    .description("Update a task comment")
+    .argument("<target>")
+    .argument("<comment-id>")
+    .argument("<body>")
+    .action(async (target: string, commentId: string, body: string) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      const resolved = await resolveTaskTarget({
+        api,
+        target,
+        workspace: config.workspace,
+        project: config.project,
+      });
+      const comment = await api.updateTaskComment({ ...resolved, commentId, body });
+      if (config.output === "json") {
+        printJson(comment);
+        return;
+      }
+      printRecord(comment as unknown as Record<string, unknown>);
+    });
+
+  command
+    .command("delete")
+    .description("Delete a task comment")
+    .argument("<target>")
+    .argument("<comment-id>")
+    .option("--force", "delete without prompting")
+    .action(
+      async (target: string, commentId: string, options: DestructiveOptions) => {
+        const context = await getContext();
+        const { config } = context;
+        const api = new JetApi(requireApiConfig(config));
+        const resolved = await resolveTaskTarget({
+          api,
+          target,
+          workspace: config.workspace,
+          project: config.project,
+        });
+        await confirmDestructiveAction(context, options, `Delete comment ${commentId}?`);
+        await api.deleteTaskComment({ ...resolved, commentId });
+        printDeleted(config, "comment", commentId);
+      },
+    );
 
   return command;
 }

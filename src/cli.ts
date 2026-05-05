@@ -9,7 +9,18 @@ import {
   createUseCommand,
 } from "./commands/config.js";
 import { createCommentCommand } from "./commands/comment.js";
+import {
+  createLabelCommand,
+  createPriorityCommand,
+  createStatusCommand,
+  createTypeCommand,
+} from "./commands/metadata.js";
 import { createProjectCommand } from "./commands/project.js";
+import {
+  createBoardCommand,
+  createLinkCommand,
+  createReferenceCommand,
+} from "./commands/relations.js";
 import { createTaskCommand } from "./commands/task.js";
 import { createWorkspaceCommand } from "./commands/workspace.js";
 import { loadRuntimeContext, type GlobalOptions } from "./config/load.js";
@@ -41,8 +52,15 @@ program.addCommand(createContextCommand(getContext));
 program.addCommand(createAuthCommand(getContext));
 program.addCommand(createWorkspaceCommand(getContext));
 program.addCommand(createProjectCommand(getContext));
+program.addCommand(createTypeCommand(getContext));
+program.addCommand(createPriorityCommand(getContext));
+program.addCommand(createStatusCommand(getContext));
+program.addCommand(createLabelCommand(getContext));
 program.addCommand(createTaskCommand(getContext));
 program.addCommand(createCommentCommand(getContext));
+program.addCommand(createLinkCommand(getContext));
+program.addCommand(createReferenceCommand(getContext));
+program.addCommand(createBoardCommand(getContext));
 
 program.parseAsync().catch(async (error: unknown) => {
   await handleError(error);
