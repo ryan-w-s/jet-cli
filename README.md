@@ -26,12 +26,14 @@ tests, builds, and release checks.
 ## Configure
 
 ```sh
-jet config set api-url http://127.0.0.1:8000
 jet config set api-key jet_your_secret_here
 jet use workspace acme
 jet use project JET
 jet auth status
 ```
+
+The CLI uses `https://justeasytasks.com` by default. To point at another API,
+set `--api-url`, `JET_API_URL`, or `jet config set api-url <url>`.
 
 Config precedence is:
 

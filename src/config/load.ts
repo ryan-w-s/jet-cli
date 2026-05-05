@@ -24,6 +24,8 @@ export type RuntimeContext = {
   noInput: boolean;
 };
 
+export const DEFAULT_API_URL = "https://justeasytasks.com";
+
 const USER_CONFIG_PATH = userConfigPath();
 
 export async function loadRuntimeContext(
@@ -43,7 +45,13 @@ export async function loadRuntimeContext(
   };
 
   return {
-    config: mergeConfigSources(userConfig, localConfig, envConfig, cliConfig),
+    config: mergeConfigSources(
+      { apiUrl: DEFAULT_API_URL },
+      userConfig,
+      localConfig,
+      envConfig,
+      cliConfig,
+    ),
     noInput: options.noInput ?? false,
   };
 }
@@ -120,16 +128,6 @@ export function parseOutput(value: string | undefined): JetConfig["output"] | un
   return undefined;
 }
 
-export function mergeConfigSources(
-  userConfig: JetConfig,
-  localConfig: JetConfig,
-  envConfig: JetConfig,
-  cliConfig: JetConfig,
-): JetConfig {
-  return compactConfig({
-    ...userConfig,
-    ...localConfig,
-    ...envConfig,
-    ...cliConfig,
-  });
+export function mergeConfigSources(...sources: JetConfig[]): JetConfig {
+  return compactConfig(Object.assign({}, ...sources));
 }

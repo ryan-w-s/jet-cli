@@ -9,11 +9,11 @@ import {
 } from "./shared.js";
 
 describe("requireApiConfig", () => {
-  test("requires an API URL", () => {
-    expect(() => requireApiConfig({ apiKey: "jet_secret" })).toThrow(CliUsageError);
-    expect(() => requireApiConfig({ apiKey: "jet_secret" })).toThrow(
-      "API URL is required.",
-    );
+  test("uses the hosted API URL by default", () => {
+    expect(requireApiConfig({ apiKey: "jet_secret" })).toEqual({
+      apiUrl: "https://justeasytasks.com",
+      apiKey: "jet_secret",
+    });
   });
 
   test("requires an API key", () => {
