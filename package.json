@@ -32,6 +32,7 @@
     "test": "bun test",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "generate:api": "bun run src/scripts/generate-api.ts",
+    "generate:docs": "bun run src/scripts/generate-docs.ts",
     "check:schema": "bun run src/scripts/check-schema.ts",
     "smoke:api": "bun run src/scripts/smoke-api.ts",
     "smoke:package": "bun run src/scripts/smoke-package.ts",

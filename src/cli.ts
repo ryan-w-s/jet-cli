@@ -32,46 +32,53 @@ import {
   CliUsageError,
 } from "./resolution/task-target.js";
 
-const program = new Command();
+export function createProgram(): Command {
+  const program = new Command();
 
-program
-  .name("jet")
-  .description("Command line interface for Just Easy Tasks")
-  .version("0.1.0")
-  .option("--api-url <url>", "JET API base URL")
-  .option("--api-key <key>", "JET API key")
-  .option("-w, --workspace <slug>", "workspace slug")
-  .option("-p, --project <key>", "project key")
-  .option("--json", "print machine-readable JSON")
-  .option("--no-cache", "disable client-side cache reads and writes")
-  .option("--refresh", "bypass cached reads and update cache entries")
-  .option("--no-input", "disable interactive prompts");
+  program
+    .name("jet")
+    .description("Command line interface for Just Easy Tasks")
+    .version("0.1.0")
+    .option("--api-url <url>", "JET API base URL")
+    .option("--api-key <key>", "JET API key")
+    .option("-w, --workspace <slug>", "workspace slug")
+    .option("-p, --project <key>", "project key")
+    .option("--json", "print machine-readable JSON")
+    .option("--no-cache", "disable client-side cache reads and writes")
+    .option("--refresh", "bypass cached reads and update cache entries")
+    .option("--no-input", "disable interactive prompts");
 
-const getContext = () => loadRuntimeContext(rootOptions());
+  const getContext = () => loadRuntimeContext(rootOptions(program));
 
-program.addCommand(createConfigCommand());
-program.addCommand(createUseCommand());
-program.addCommand(createContextCommand(getContext));
-program.addCommand(createCacheCommand(getContext));
-program.addCommand(createAuthCommand(getContext));
-program.addCommand(createWorkspaceCommand(getContext));
-program.addCommand(createProjectCommand(getContext));
-program.addCommand(createTypeCommand(getContext));
-program.addCommand(createPriorityCommand(getContext));
-program.addCommand(createStatusCommand(getContext));
-program.addCommand(createLabelCommand(getContext));
-program.addCommand(createTaskCommand(getContext));
-program.addCommand(createCommentCommand(getContext));
-program.addCommand(createLinkCommand(getContext));
-program.addCommand(createReferenceCommand(getContext));
-program.addCommand(createBoardCommand(getContext));
+  program.addCommand(createConfigCommand());
+  program.addCommand(createUseCommand());
+  program.addCommand(createContextCommand(getContext));
+  program.addCommand(createCacheCommand(getContext));
+  program.addCommand(createAuthCommand(getContext));
+  program.addCommand(createWorkspaceCommand(getContext));
+  program.addCommand(createProjectCommand(getContext));
+  program.addCommand(createTypeCommand(getContext));
+  program.addCommand(createPriorityCommand(getContext));
+  program.addCommand(createStatusCommand(getContext));
+  program.addCommand(createLabelCommand(getContext));
+  program.addCommand(createTaskCommand(getContext));
+  program.addCommand(createCommentCommand(getContext));
+  program.addCommand(createLinkCommand(getContext));
+  program.addCommand(createReferenceCommand(getContext));
+  program.addCommand(createBoardCommand(getContext));
 
-program.parseAsync().catch(async (error: unknown) => {
-  await handleError(error);
-  process.exitCode = 1;
-});
+  return program;
+}
 
-function rootOptions(): GlobalOptions {
+if (import.meta.main) {
+  const program = createProgram();
+  program.parseAsync().catch(async (error: unknown) => {
+    await handleError(error, program);
+    process.exitCode = 1;
+  });
+}
+
+function rootOptions(program: Command): GlobalOptions {
   const options = program.opts<GlobalOptions & { input?: boolean }>();
   return {
     ...options,
@@ -79,8 +86,8 @@ function rootOptions(): GlobalOptions {
   };
 }
 
-async function handleError(error: unknown): Promise<void> {
-  const context = await loadRuntimeContext(rootOptions()).catch(() => undefined);
+async function handleError(error: unknown, program: Command): Promise<void> {
+  const context = await loadRuntimeContext(rootOptions(program)).catch(() => undefined);
   const json = context?.config.output === "json";
 
   if (error instanceof AmbiguousTaskError) {
