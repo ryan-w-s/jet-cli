@@ -8,6 +8,8 @@ export type JetConfig = {
   workspace?: string;
   project?: string;
   output?: "human" | "json";
+  cache?: "on" | "off";
+  cacheRefresh?: boolean;
 };
 
 export type GlobalOptions = {
@@ -17,6 +19,8 @@ export type GlobalOptions = {
   project?: string;
   json?: boolean;
   noInput?: boolean;
+  cache?: boolean;
+  refresh?: boolean;
 };
 
 export type RuntimeContext = {
@@ -42,6 +46,8 @@ export async function loadRuntimeContext(
     workspace: options.workspace,
     project: options.project,
     output: options.json ? "json" : undefined,
+    cache: options.cache === false ? "off" : undefined,
+    cacheRefresh: options.refresh ? true : undefined,
   };
 
   return {
@@ -76,6 +82,7 @@ function readEnvConfig(): JetConfig {
     workspace: process.env["JET_WORKSPACE"],
     project: process.env["JET_PROJECT"],
     output: parseOutput(process.env["JET_OUTPUT"]),
+    cache: parseCache(process.env["JET_CACHE"]),
   });
 }
 
@@ -123,6 +130,13 @@ export function compactConfig(config: JetConfig): JetConfig {
 
 export function parseOutput(value: string | undefined): JetConfig["output"] | undefined {
   if (value === "json" || value === "human") {
+    return value;
+  }
+  return undefined;
+}
+
+export function parseCache(value: string | undefined): JetConfig["cache"] | undefined {
+  if (value === "on" || value === "off") {
     return value;
   }
   return undefined;

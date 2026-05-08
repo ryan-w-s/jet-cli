@@ -15,6 +15,7 @@ const CONFIG_KEYS = new Set<keyof JetConfig>([
   "workspace",
   "project",
   "output",
+  "cache",
 ]);
 
 export function createConfigCommand(): Command {
@@ -23,7 +24,7 @@ export function createConfigCommand(): Command {
   command
     .command("set")
     .description("Set a user-level config value")
-    .argument("<key>", "api-url, api-key, workspace, project, or output")
+    .argument("<key>", "api-url, api-key, workspace, project, output, or cache")
     .argument("<value>", "value to store")
     .action(async (key: string, value: string) => {
       const normalizedKey = normalizeConfigKey(key);

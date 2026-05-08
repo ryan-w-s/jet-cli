@@ -7,6 +7,7 @@ import {
   compactConfig,
   findUp,
   mergeConfigSources,
+  parseCache,
   parseOutput,
 } from "./load.js";
 
@@ -44,6 +45,15 @@ describe("parseOutput", () => {
     expect(parseOutput("human")).toBe("human");
     expect(parseOutput("yaml")).toBeUndefined();
     expect(parseOutput(undefined)).toBeUndefined();
+  });
+});
+
+describe("parseCache", () => {
+  test("accepts supported cache modes only", () => {
+    expect(parseCache("on")).toBe("on");
+    expect(parseCache("off")).toBe("off");
+    expect(parseCache("false")).toBeUndefined();
+    expect(parseCache(undefined)).toBeUndefined();
   });
 });
 

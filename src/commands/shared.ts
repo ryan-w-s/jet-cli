@@ -8,7 +8,12 @@ export function requireApiConfig(config: JetConfig): JetApiOptions {
       "API key is required. Pass --api-key, set JET_API_KEY, or run `jet config set api-key <key>`.",
     );
   }
-  return { apiUrl: config.apiUrl ?? DEFAULT_API_URL, apiKey: config.apiKey };
+  return {
+    apiUrl: config.apiUrl ?? DEFAULT_API_URL,
+    apiKey: config.apiKey,
+    cache: config.cache,
+    cacheRefresh: config.cacheRefresh,
+  };
 }
 
 export type DestructiveOptions = {

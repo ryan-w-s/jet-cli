@@ -6,6 +6,7 @@ describe("jet command", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("workspace");
+    expect(result.stdout).toContain("cache");
     expect(result.stdout).toContain("project");
     expect(result.stdout).toContain("task");
     expect(result.stdout).toContain("comment");
@@ -39,6 +40,14 @@ describe("jet command", () => {
       project: "JET",
       output: "human",
     });
+  });
+
+  test("lists cache flags in help", async () => {
+    const result = await runCli(["--help"]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain("--no-cache");
+    expect(result.stdout).toContain("--refresh");
   });
 });
 

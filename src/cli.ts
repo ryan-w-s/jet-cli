@@ -3,6 +3,7 @@ import { Command } from "commander";
 
 import { JetApiError } from "./api/client.js";
 import { createAuthCommand } from "./commands/auth.js";
+import { createCacheCommand } from "./commands/cache.js";
 import {
   createConfigCommand,
   createContextCommand,
@@ -42,6 +43,8 @@ program
   .option("-w, --workspace <slug>", "workspace slug")
   .option("-p, --project <key>", "project key")
   .option("--json", "print machine-readable JSON")
+  .option("--no-cache", "disable client-side cache reads and writes")
+  .option("--refresh", "bypass cached reads and update cache entries")
   .option("--no-input", "disable interactive prompts");
 
 const getContext = () => loadRuntimeContext(rootOptions());
@@ -49,6 +52,7 @@ const getContext = () => loadRuntimeContext(rootOptions());
 program.addCommand(createConfigCommand());
 program.addCommand(createUseCommand());
 program.addCommand(createContextCommand(getContext));
+program.addCommand(createCacheCommand(getContext));
 program.addCommand(createAuthCommand(getContext));
 program.addCommand(createWorkspaceCommand(getContext));
 program.addCommand(createProjectCommand(getContext));

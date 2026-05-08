@@ -1,5 +1,14 @@
 import createClient, { type Client } from "openapi-fetch";
 
+import { fingerprintApiKey } from "../cache/fingerprint.js";
+import { buildCacheKey } from "../cache/key.js";
+import { defaultCacheFile } from "../cache/paths.js";
+import {
+  cachePolicyForGet,
+  invalidationScopesForMutation,
+  type CacheContext,
+} from "../cache/policy.js";
+import { JsonCacheStore, type CacheEntry } from "../cache/store.js";
 import type { components, paths } from "../generated/schema.js";
 
 export type AuthActor = components["schemas"]["AuthActorRead"];
@@ -54,17 +63,33 @@ export class JetApiError extends Error {
 export type JetApiOptions = {
   apiUrl: string;
   apiKey: string;
+  cache?: "on" | "off";
+  cacheRefresh?: boolean;
+  cacheFile?: string;
+  fetch?: (input: Request) => Promise<Response>;
 };
 
 export class JetApi {
   private readonly client: Client<paths>;
+  private readonly options: Required<Pick<JetApiOptions, "apiUrl" | "apiKey">> &
+    Pick<JetApiOptions, "cache" | "cacheRefresh" | "cacheFile">;
+  private readonly cacheContext: CacheContext;
+  private readonly cacheStore: JsonCacheStore;
 
   constructor(options: JetApiOptions) {
+    const apiUrl = trimTrailingSlash(options.apiUrl);
+    this.options = { ...options, apiUrl, apiKey: options.apiKey };
+    this.cacheContext = {
+      apiUrl,
+      apiKeyFingerprint: fingerprintApiKey(options.apiKey),
+    };
+    this.cacheStore = new JsonCacheStore(options.cacheFile ?? defaultCacheFile());
     this.client = createClient<paths>({
-      baseUrl: trimTrailingSlash(options.apiUrl),
+      baseUrl: apiUrl,
       headers: {
         "X-API-Key": options.apiKey,
       },
+      fetch: options.fetch,
     });
   }
 
@@ -845,10 +870,41 @@ export class JetApi {
     pathParams: Record<string, unknown> = {},
     queryParams?: Record<string, unknown>,
   ): Promise<T> {
+    const policy = cachePolicyForGet(this.cacheContext, path, pathParams);
+    const cacheKey =
+      policy === undefined
+        ? undefined
+        : buildCacheKey({
+            apiUrl: this.cacheContext.apiUrl,
+            apiKeyFingerprint: this.cacheContext.apiKeyFingerprint,
+            method: "GET",
+            path,
+            pathParams,
+            queryParams,
+          });
+    if (this.options.cache !== "off" && !this.options.cacheRefresh && policy && cacheKey) {
+      const cached = await this.cacheStore.get(cacheKey);
+      if (cached) {
+        return cached.body as T;
+      }
+    }
+
     const { data, error, response } = await (this.client.GET as HttpMethod)(path, {
       params: { path: pathParams, query: queryParams },
     });
-    return unwrap(data as T | undefined, error, response);
+    const unwrapped = unwrap(data as T | undefined, error, response);
+    if (this.options.cache !== "off" && policy && cacheKey) {
+      await this.cacheStore.set({
+        key: cacheKey,
+        scope: policy.scope,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + policy.ttlMs,
+        status: response.status,
+        headers: headersToRecord(response.headers),
+        body: unwrapped,
+      });
+    }
+    return unwrapped;
   }
 
   private async post<T>(
@@ -860,7 +916,9 @@ export class JetApi {
       params: { path: pathParams },
       body,
     });
-    return unwrap(data as T | undefined, error, response);
+    const unwrapped = unwrap(data as T | undefined, error, response);
+    await this.invalidateAfterMutation(path, pathParams);
+    return unwrapped;
   }
 
   private async patch<T>(
@@ -872,7 +930,9 @@ export class JetApi {
       params: { path: pathParams },
       body,
     });
-    return unwrap(data as T | undefined, error, response);
+    const unwrapped = unwrap(data as T | undefined, error, response);
+    await this.invalidateAfterMutation(path, pathParams);
+    return unwrapped;
   }
 
   private async delete(
@@ -883,6 +943,20 @@ export class JetApi {
       params: { path: pathParams },
     });
     unwrap(data as void | undefined, error, response);
+    await this.invalidateAfterMutation(path, pathParams);
+  }
+
+  private async invalidateAfterMutation(
+    path: keyof paths,
+    pathParams: Record<string, unknown>,
+  ): Promise<void> {
+    if (this.options.cache === "off") {
+      return;
+    }
+    const scopes = invalidationScopesForMutation(this.cacheContext, path, pathParams);
+    await Promise.all(
+      scopes.map((scope) => this.cacheStore.deleteByScopePrefix(scope)),
+    );
   }
 }
 
@@ -901,6 +975,10 @@ function taskPath(options: {
     project_key: options.projectKey,
     task_number: options.taskNumber,
   };
+}
+
+function headersToRecord(headers: Headers): CacheEntry["headers"] {
+  return Object.fromEntries(headers.entries());
 }
 
 export function trimTrailingSlash(value: string): string {

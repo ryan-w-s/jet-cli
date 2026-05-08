@@ -10,6 +10,7 @@ describe("normalizeConfigKey", () => {
     expect(normalizeConfigKey("workspace")).toBe("workspace");
     expect(normalizeConfigKey("project")).toBe("project");
     expect(normalizeConfigKey("output")).toBe("output");
+    expect(normalizeConfigKey("cache")).toBe("cache");
   });
 
   test("rejects unknown config keys", () => {

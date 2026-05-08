@@ -48,6 +48,35 @@ API keys are stored as plaintext when saved with `jet config set api-key`.
 Use environment variables or your platform secret manager if local plaintext
 storage is not acceptable.
 
+## Client Cache
+
+The CLI caches selected GET responses for stable metadata such as workspaces,
+projects, statuses, labels, boards, task types, priorities, and short-lived task
+resolution. The cache is scoped by API URL and a SHA-256 fingerprint of the API
+key, so entries are not shared across servers or API keys. Raw API keys are never
+stored in the cache.
+
+By default the cache is enabled. To bypass it:
+
+```sh
+jet --refresh project list   # fetch fresh data and update the cache
+jet --no-cache project list  # skip cache reads and writes
+JET_CACHE=off jet task get JET-123
+jet config set cache off
+```
+
+Manage cached data:
+
+```sh
+jet cache status
+jet cache clear
+jet cache clear --all
+jet cache prune
+```
+
+`jet cache clear` removes entries for the current API URL and API key. Use
+`--all` to remove every local cache entry.
+
 ## Commands
 
 Core commands:
