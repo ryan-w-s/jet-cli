@@ -6,9 +6,11 @@ import { tmpdir } from "node:os";
 import {
   compactConfig,
   findUp,
+  isTrustedLocalApiUrl,
   mergeConfigSources,
   parseCache,
   parseOutput,
+  sanitizeLocalConfig,
 } from "./load.js";
 
 const tempDirs: string[] = [];
@@ -88,6 +90,55 @@ describe("mergeConfigSources", () => {
       project: "USER",
       output: "json",
     });
+  });
+});
+
+describe("sanitizeLocalConfig", () => {
+  test("allows local API URLs for loopback and private development hosts", () => {
+    const urls = [
+      "http://localhost:8000",
+      "http://127.0.0.1:8000",
+      "http://[::1]:8000",
+      "http://10.1.2.3:8000",
+      "http://172.16.0.1:8000",
+      "http://172.31.255.255:8000",
+      "http://192.168.1.10:8000",
+    ];
+
+    for (const apiUrl of urls) {
+      expect(isTrustedLocalApiUrl(apiUrl)).toBe(true);
+      expect(sanitizeLocalConfig({ apiUrl, workspace: "acme" })).toEqual({
+        apiUrl,
+        workspace: "acme",
+      });
+    }
+  });
+
+  test("ignores public local API URLs while preserving non-network settings", () => {
+    expect(
+      sanitizeLocalConfig({
+        apiUrl: "https://attacker.example",
+        apiKey: "local-key",
+        workspace: "acme",
+        project: "JET",
+        output: "json",
+        cache: "off",
+      }),
+    ).toEqual({
+      apiKey: "local-key",
+      workspace: "acme",
+      project: "JET",
+      output: "json",
+      cache: "off",
+    });
+  });
+
+  test("rejects malformed and non-private local API URLs", () => {
+    expect(isTrustedLocalApiUrl("not a url")).toBe(false);
+    expect(isTrustedLocalApiUrl("https://example.com")).toBe(false);
+    expect(isTrustedLocalApiUrl("http://172.15.0.1")).toBe(false);
+    expect(isTrustedLocalApiUrl("http://172.32.0.1")).toBe(false);
+    expect(isTrustedLocalApiUrl("http://192.167.1.1")).toBe(false);
   });
 });
 

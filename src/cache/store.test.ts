@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -71,6 +71,13 @@ describe("JsonCacheStore", () => {
     expect(await store.get("first")).toMatchObject({ body: { key: "first" } });
     expect(await store.get("second")).toMatchObject({ body: { key: "second" } });
     expect(await store.get("third")).toMatchObject({ body: { key: "third" } });
+  });
+
+  test.skipIf(process.platform === "win32")("writes cache files with private POSIX permissions", async () => {
+    const store = await makeStore();
+    await store.set(entry("private", "scope"));
+
+    expect((await stat(store.path)).mode & 0o777).toBe(0o600);
   });
 });
 

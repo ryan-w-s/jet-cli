@@ -1,7 +1,9 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, rename, stat, unlink, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, rename, stat, unlink, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
+
+const PRIVATE_FILE_MODE = 0o600;
 
 export type CacheEntry = {
   key: string;
@@ -157,11 +159,14 @@ export class JsonCacheStore {
     await mkdir(dirname(this.path), { recursive: true });
     const tempPath = `${this.path}.${process.pid}.${randomUUID()}.tmp`;
     try {
-      await writeFile(tempPath, `${JSON.stringify(cache, null, 2)}\n`);
+      await writeFile(tempPath, `${JSON.stringify(cache, null, 2)}\n`, {
+        mode: PRIVATE_FILE_MODE,
+      });
       if (process.platform === "win32" && existsSync(this.path)) {
         await unlink(this.path);
       }
       await rename(tempPath, this.path);
+      await chmodPrivate(this.path);
     } catch (error) {
       if (existsSync(tempPath)) {
         await unlink(tempPath).catch(() => undefined);
@@ -180,6 +185,13 @@ export class JsonCacheStore {
       return 0;
     }
   }
+}
+
+async function chmodPrivate(path: string): Promise<void> {
+  if (process.platform === "win32") {
+    return;
+  }
+  await chmod(path, PRIVATE_FILE_MODE).catch(() => undefined);
 }
 
 export async function removeCacheFile(path: string): Promise<void> {
