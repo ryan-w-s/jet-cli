@@ -5,7 +5,7 @@ import { CliUsageError } from "../resolution/task-target.js";
 export function requireApiConfig(config: JetConfig): JetApiOptions {
   if (!config.apiKey) {
     throw new CliUsageError(
-      "API key is required. Pass --api-key, set JET_API_KEY, or run `jet config set api-key <key>`.",
+      "API key is required. Pass --api-key <key>, set JET_API_KEY, or run `jet config set api-key <key>`.",
     );
   }
   return {
@@ -29,7 +29,7 @@ export async function confirmDestructiveAction(
     return;
   }
   if (context.noInput) {
-    throw new CliUsageError(`${message} Re-run with --force to confirm.`);
+    throw new CliUsageError(`${message} Confirmation is disabled by --no-input. Re-run with --force to confirm.`);
   }
 
   const { createInterface } = await import("node:readline/promises");
@@ -59,7 +59,7 @@ export function parseJsonObject(value: string | undefined): Record<string, unkno
   }
   const parsed = JSON.parse(value) as unknown;
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    throw new CliUsageError("Expected a JSON object.");
+    throw new CliUsageError(`Expected a JSON object, for example '{"statusKey":"open"}'. Received: ${value}`);
   }
   return parsed as Record<string, unknown>;
 }

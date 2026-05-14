@@ -186,7 +186,7 @@ describe("resolveTaskTarget", () => {
         target: "login",
         workspace: "acme",
       }),
-    ).rejects.toThrow("Resolved task did not include a project key.");
+    ).rejects.toThrow("did not include its project key");
 
     await expect(
       resolveTaskTarget({
@@ -200,7 +200,7 @@ describe("resolveTaskTarget", () => {
         target: "login",
         workspace: "acme",
       }),
-    ).rejects.toThrow("ambiguous result without candidates");
+    ).rejects.toThrow("did not return candidates");
   });
 });
 

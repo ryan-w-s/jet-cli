@@ -34,29 +34,34 @@ type LabelOptions = {
 export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("type").description("Manage workspace task types");
 
-  command.command("list").action(async () => {
+  command.command("list").description("List task types in the active workspace").action(async () => {
     const { config } = await getContext();
     const api = new JetApi(requireApiConfig(config));
     printList(config.output, await api.listTaskTypes(requireWorkspace(config.workspace)));
   });
 
-  command.command("get").argument("<key>").action(async (typeKey: string) => {
-    const { config } = await getContext();
-    const api = new JetApi(requireApiConfig(config));
-    printOne(
-      config.output,
-      await api.getTaskType({
-        workspaceSlug: requireWorkspace(config.workspace),
-        typeKey,
-      }),
-    );
-  });
+  command
+    .command("get")
+    .description("Show a task type")
+    .argument("<key>", "task type key")
+    .action(async (typeKey: string) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      printOne(
+        config.output,
+        await api.getTaskType({
+          workspaceSlug: requireWorkspace(config.workspace),
+          typeKey,
+        }),
+      );
+    });
 
   command
     .command("create")
-    .argument("<key>")
-    .argument("<name>")
-    .option("--description <text>")
+    .description("Create a task type")
+    .argument("<key>", "task type key")
+    .argument("<name>", "task type name")
+    .option("--description <text>", "task type description")
     .action(async (key: string, name: string, options: NamedOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -71,9 +76,10 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
 
   command
     .command("update")
-    .argument("<key>")
-    .option("--name <name>")
-    .option("--description <text>")
+    .description("Update a task type")
+    .argument("<key>", "task type key")
+    .option("--name <name>", "new task type name")
+    .option("--description <text>", "new task type description")
     .action(async (typeKey: string, options: NamedOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -92,7 +98,8 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
 
   command
     .command("delete")
-    .argument("<key>")
+    .description("Delete a task type")
+    .argument("<key>", "task type key")
     .option("--force", "delete without prompting")
     .action(async (typeKey: string, options: DestructiveOptions) => {
       const context = await getContext();
@@ -110,30 +117,35 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
 }
 
 export function createPriorityCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("priority").description("Manage task priorities");
+  const command = new Command("priority").description("Manage workspace task priorities");
 
-  command.command("list").action(async () => {
+  command.command("list").description("List task priorities in the active workspace").action(async () => {
     const { config } = await getContext();
     const api = new JetApi(requireApiConfig(config));
     printList(config.output, await api.listTaskPriorities(requireWorkspace(config.workspace)));
   });
 
-  command.command("get").argument("<key>").action(async (priorityKey: string) => {
-    const { config } = await getContext();
-    const api = new JetApi(requireApiConfig(config));
-    printOne(
-      config.output,
-      await api.getTaskPriority({
-        workspaceSlug: requireWorkspace(config.workspace),
-        priorityKey,
-      }),
-    );
-  });
+  command
+    .command("get")
+    .description("Show a task priority")
+    .argument("<key>", "priority key")
+    .action(async (priorityKey: string) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      printOne(
+        config.output,
+        await api.getTaskPriority({
+          workspaceSlug: requireWorkspace(config.workspace),
+          priorityKey,
+        }),
+      );
+    });
 
   command
     .command("create")
-    .argument("<key>")
-    .argument("<name>")
+    .description("Create a task priority")
+    .argument("<key>", "priority key")
+    .argument("<name>", "priority name")
     .option("--rank <number>", "sort rank", "0")
     .action(async (key: string, name: string, options: { rank: string }) => {
       const { config } = await getContext();
@@ -149,9 +161,10 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
 
   command
     .command("update")
-    .argument("<key>")
-    .option("--name <name>")
-    .option("--rank <number>")
+    .description("Update a task priority")
+    .argument("<key>", "priority key")
+    .option("--name <name>", "new priority name")
+    .option("--rank <number>", "new sort rank")
     .action(async (priorityKey: string, options: RankedOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -170,7 +183,8 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
 
   command
     .command("delete")
-    .argument("<key>")
+    .description("Delete a task priority")
+    .argument("<key>", "priority key")
     .option("--force", "delete without prompting")
     .action(async (priorityKey: string, options: DestructiveOptions) => {
       const context = await getContext();
@@ -194,7 +208,7 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
 export function createStatusCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("status").description("Manage project task statuses");
 
-  command.command("list").action(async () => {
+  command.command("list").description("List statuses in the active project").action(async () => {
     const { config } = await getContext();
     const api = new JetApi(requireApiConfig(config));
     printList(
@@ -206,24 +220,29 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
     );
   });
 
-  command.command("get").argument("<key>").action(async (statusKey: string) => {
-    const { config } = await getContext();
-    const api = new JetApi(requireApiConfig(config));
-    printOne(
-      config.output,
-      await api.getTaskStatus({
-        workspaceSlug: requireWorkspace(config.workspace),
-        projectKey: requireProject(config.project),
-        statusKey,
-      }),
-    );
-  });
+  command
+    .command("get")
+    .description("Show a task status")
+    .argument("<key>", "status key")
+    .action(async (statusKey: string) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      printOne(
+        config.output,
+        await api.getTaskStatus({
+          workspaceSlug: requireWorkspace(config.workspace),
+          projectKey: requireProject(config.project),
+          statusKey,
+        }),
+      );
+    });
 
   command
     .command("create")
-    .argument("<key>")
-    .argument("<name>")
-    .option("--category <category>")
+    .description("Create a task status in the active project")
+    .argument("<key>", "status key")
+    .argument("<name>", "status name")
+    .option("--category <category>", "status category, such as open or done")
     .option("--rank <number>", "sort rank", "0")
     .action(async (key: string, name: string, options: Required<StatusOptions>) => {
       const { config } = await getContext();
@@ -245,10 +264,11 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
 
   command
     .command("update")
-    .argument("<key>")
-    .option("--name <name>")
-    .option("--category <category>")
-    .option("--rank <number>")
+    .description("Update a task status")
+    .argument("<key>", "status key")
+    .option("--name <name>", "new status name")
+    .option("--category <category>", "new status category")
+    .option("--rank <number>", "new sort rank")
     .action(async (statusKey: string, options: StatusOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -269,7 +289,8 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
 
   command
     .command("delete")
-    .argument("<key>")
+    .description("Delete a task status")
+    .argument("<key>", "status key")
     .option("--force", "delete without prompting")
     .action(async (statusKey: string, options: DestructiveOptions) => {
       const context = await getContext();
@@ -290,7 +311,7 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
 export function createLabelCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("label").description("Manage project labels");
 
-  command.command("list").action(async () => {
+  command.command("list").description("List labels in the active project").action(async () => {
     const { config } = await getContext();
     const api = new JetApi(requireApiConfig(config));
     printList(
@@ -302,24 +323,29 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
     );
   });
 
-  command.command("get").argument("<key>").action(async (labelKey: string) => {
-    const { config } = await getContext();
-    const api = new JetApi(requireApiConfig(config));
-    printOne(
-      config.output,
-      await api.getLabel({
-        workspaceSlug: requireWorkspace(config.workspace),
-        projectKey: requireProject(config.project),
-        labelKey,
-      }),
-    );
-  });
+  command
+    .command("get")
+    .description("Show a label")
+    .argument("<key>", "label key")
+    .action(async (labelKey: string) => {
+      const { config } = await getContext();
+      const api = new JetApi(requireApiConfig(config));
+      printOne(
+        config.output,
+        await api.getLabel({
+          workspaceSlug: requireWorkspace(config.workspace),
+          projectKey: requireProject(config.project),
+          labelKey,
+        }),
+      );
+    });
 
   command
     .command("create")
-    .argument("<key>")
-    .argument("<name>")
-    .option("--color <color>")
+    .description("Create a project label")
+    .argument("<key>", "label key")
+    .argument("<name>", "label name")
+    .option("--color <color>", "label color name or value")
     .action(async (key: string, name: string, options: LabelOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -335,9 +361,10 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
 
   command
     .command("update")
-    .argument("<key>")
-    .option("--name <name>")
-    .option("--color <color>")
+    .description("Update a project label")
+    .argument("<key>", "label key")
+    .option("--name <name>", "new label name")
+    .option("--color <color>", "new label color")
     .action(async (labelKey: string, options: LabelOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -357,7 +384,8 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
 
   command
     .command("delete")
-    .argument("<key>")
+    .description("Delete a project label")
+    .argument("<key>", "label key")
     .option("--force", "delete without prompting")
     .action(async (labelKey: string, options: DestructiveOptions) => {
       const context = await getContext();

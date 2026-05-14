@@ -12,11 +12,11 @@ import {
 } from "./shared.js";
 
 export function createAuthCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("auth").description("Inspect API-key authentication");
+  const command = new Command("auth").description("Check API-key authentication and manage keys");
 
   command
     .command("status")
-    .description("Check whether the configured API key works")
+    .description("Check whether the configured API key can authenticate")
     .action(async () => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -29,11 +29,11 @@ export function createAuthCommand(getContext: () => Promise<RuntimeContext>): Co
       console.log(`Auth type: ${actor.auth_type}`);
     });
 
-  const keys = new Command("keys").description("Manage API keys");
+  const keys = new Command("keys").description("List, create, and revoke API keys");
 
   keys
     .command("list")
-    .description("List API keys for the current user")
+    .description("List API keys owned by the authenticated user")
     .action(async () => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -48,7 +48,7 @@ export function createAuthCommand(getContext: () => Promise<RuntimeContext>): Co
   keys
     .command("create")
     .description("Create an API key")
-    .argument("<name>")
+    .argument("<name>", "name shown in API key lists")
     .action(async (name: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -65,7 +65,7 @@ export function createAuthCommand(getContext: () => Promise<RuntimeContext>): Co
   keys
     .command("revoke")
     .description("Revoke an API key")
-    .argument("<api-key-id>")
+    .argument("<api-key-id>", "API key ID to revoke")
     .option("--force", "revoke without prompting")
     .action(async (apiKeyId: string, options: DestructiveOptions) => {
       const context = await getContext();

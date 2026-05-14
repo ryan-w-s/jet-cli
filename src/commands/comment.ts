@@ -13,12 +13,12 @@ import {
 } from "./shared.js";
 
 export function createCommentCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("comment").description("Work with task comments");
+  const command = new Command("comment").description("List, add, update, and delete task comments");
 
   command
     .command("list")
     .description("List comments for a task")
-    .argument("<target>")
+    .argument("<target>", "task ref, number, or title fragment")
     .action(async (target: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -39,8 +39,8 @@ export function createCommentCommand(getContext: () => Promise<RuntimeContext>):
   command
     .command("add")
     .description("Add a comment to a task")
-    .argument("<target>")
-    .argument("<body>")
+    .argument("<target>", "task ref, number, or title fragment")
+    .argument("<body>", "comment body")
     .action(async (target: string, body: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -61,9 +61,9 @@ export function createCommentCommand(getContext: () => Promise<RuntimeContext>):
   command
     .command("update")
     .description("Update a task comment")
-    .argument("<target>")
-    .argument("<comment-id>")
-    .argument("<body>")
+    .argument("<target>", "task ref, number, or title fragment")
+    .argument("<comment-id>", "comment ID")
+    .argument("<body>", "new comment body")
     .action(async (target: string, commentId: string, body: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -84,8 +84,8 @@ export function createCommentCommand(getContext: () => Promise<RuntimeContext>):
   command
     .command("delete")
     .description("Delete a task comment")
-    .argument("<target>")
-    .argument("<comment-id>")
+    .argument("<target>", "task ref, number, or title fragment")
+    .argument("<comment-id>", "comment ID")
     .option("--force", "delete without prompting")
     .action(
       async (target: string, commentId: string, options: DestructiveOptions) => {

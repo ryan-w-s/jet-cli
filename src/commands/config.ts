@@ -8,6 +8,7 @@ import {
   writeUserConfig,
 } from "../config/load.js";
 import { printJson } from "../output/json.js";
+import { CliUsageError } from "../resolution/task-target.js";
 
 const CONFIG_KEYS = new Set<keyof JetConfig>([
   "apiUrl",
@@ -23,7 +24,7 @@ export function createConfigCommand(): Command {
 
   command
     .command("set")
-    .description("Set a user-level config value")
+    .description("Save a user-level config value")
     .argument("<key>", "api-url, api-key, workspace, project, output, or cache")
     .argument("<value>", "value to store")
     .action(async (key: string, value: string) => {
@@ -36,9 +37,9 @@ export function createConfigCommand(): Command {
 
   command
     .command("get")
-    .description("Show user-level config")
+    .description("Show user-level config values")
     .argument("[key]", "optional config key")
-    .option("--json", "print JSON")
+    .option("--json", "print config as JSON")
     .action(async (key: string | undefined, options: { json?: boolean }) => {
       const config = await readUserConfig();
       if (key) {
@@ -64,12 +65,12 @@ export function createConfigCommand(): Command {
 }
 
 export function createUseCommand(): Command {
-  const command = new Command("use").description("Set default workspace or project");
+  const command = new Command("use").description("Set default workspace or project context");
 
   command
     .command("workspace")
-    .description("Set the default workspace")
-    .argument("<slug>")
+    .description("Set the default workspace for future commands")
+    .argument("<slug>", "workspace slug")
     .action(async (slug: string) => {
       const config = await readUserConfig();
       await writeUserConfig({ ...config, workspace: slug });
@@ -78,8 +79,8 @@ export function createUseCommand(): Command {
 
   command
     .command("project")
-    .description("Set the default project")
-    .argument("<key>")
+    .description("Set the default project for future commands")
+    .argument("<key>", "project key")
     .action(async (key: string) => {
       const config = await readUserConfig();
       await writeUserConfig({ ...config, project: key });
@@ -91,7 +92,7 @@ export function createUseCommand(): Command {
 
 export function createContextCommand(getContext: () => Promise<RuntimeContext>): Command {
   return new Command("context")
-    .description("Show the resolved CLI context")
+    .description("Show the active API URL, auth, workspace, project, and output mode")
     .action(async () => {
       const { config } = await getContext();
       printJson({
@@ -107,7 +108,9 @@ export function createContextCommand(getContext: () => Promise<RuntimeContext>):
 export function normalizeConfigKey(key: string): keyof JetConfig {
   const normalized = key.replace(/-([a-z])/g, (_, char: string) => char.toUpperCase());
   if (!CONFIG_KEYS.has(normalized as keyof JetConfig)) {
-    throw new Error(`Unknown config key "${key}".`);
+    throw new CliUsageError(
+      `Unknown config key "${key}". Expected one of: api-url, api-key, workspace, project, output, cache.`,
+    );
   }
   return normalized as keyof JetConfig;
 }

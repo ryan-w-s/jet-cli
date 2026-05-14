@@ -55,7 +55,7 @@ describe("shared command helpers", () => {
   test("parses JSON object options", () => {
     expect(parseJsonObject('{"status":"open"}')).toEqual({ status: "open" });
     expect(parseJsonObject(undefined)).toEqual({});
-    expect(() => parseJsonObject("[]")).toThrow("Expected a JSON object.");
+    expect(() => parseJsonObject("[]")).toThrow("Expected a JSON object");
   });
 
   test("requires --force for destructive actions when input is disabled", async () => {

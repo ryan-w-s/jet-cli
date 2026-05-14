@@ -14,7 +14,7 @@ import {
 } from "./shared.js";
 
 export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("workspace").description("Work with workspaces");
+  const command = new Command("workspace").description("List, create, update, and delete workspaces");
 
   command
     .command("list")
@@ -32,7 +32,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
 
   command
     .command("get")
-    .description("Get a workspace")
+    .description("Show a workspace")
     .argument("[slug]", "workspace slug")
     .action(async (slug: string | undefined) => {
       const { config } = await getContext();
@@ -44,9 +44,9 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
   command
     .command("create")
     .description("Create a workspace")
-    .argument("<slug>")
-    .argument("<name>")
-    .option("--description <text>")
+    .argument("<slug>", "workspace slug")
+    .argument("<name>", "workspace name")
+    .option("--description <text>", "workspace description")
     .action(async (slug: string, name: string, options: { description?: string }) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -62,8 +62,8 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
     .command("update")
     .description("Update a workspace")
     .argument("[slug]", "workspace slug")
-    .option("--name <name>")
-    .option("--description <text>")
+    .option("--name <name>", "new workspace name")
+    .option("--description <text>", "new workspace description")
     .action(async (slug: string | undefined, options: WorkspaceUpdateOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -92,7 +92,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
       printDeleted(config, "workspace", workspaceSlug);
     });
 
-  const members = new Command("member").description("Manage workspace members");
+  const members = new Command("member").description("List and remove workspace members");
   members
     .command("list")
     .description("List workspace members")
@@ -109,7 +109,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
   members
     .command("remove")
     .description("Remove a workspace member")
-    .argument("<user-id>")
+    .argument("<user-id>", "user ID to remove")
     .argument("[workspace]", "workspace slug")
     .option("--force", "remove without prompting")
     .action(
@@ -133,7 +133,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
     );
   command.addCommand(members);
 
-  const invites = new Command("invite").description("Manage workspace invites");
+  const invites = new Command("invite").description("List, create, accept, and delete workspace invites");
   invites
     .command("list")
     .description("List active workspace invites")
@@ -149,8 +149,8 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
 
   invites
     .command("get")
-    .description("Get a workspace invite")
-    .argument("<invite-id>")
+    .description("Show a workspace invite")
+    .argument("<invite-id>", "invite ID")
     .action(async (inviteId: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -161,9 +161,9 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
   invites
     .command("create")
     .description("Create a workspace invite")
-    .argument("<email>")
+    .argument("<email>", "email address to invite")
     .argument("[workspace]", "workspace slug")
-    .option("--role <role>", "workspace role", "member")
+    .option("--role <role>", "workspace role to grant", "member")
     .action(
       async (
         email: string,
@@ -183,7 +183,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
   invites
     .command("delete")
     .description("Delete a workspace invite")
-    .argument("<invite-id>")
+    .argument("<invite-id>", "invite ID")
     .argument("[workspace]", "workspace slug")
     .option("--force", "delete without prompting")
     .action(
@@ -209,7 +209,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
   invites
     .command("accept")
     .description("Accept a workspace invite")
-    .argument("<invite-id>")
+    .argument("<invite-id>", "invite ID")
     .argument("[workspace]", "workspace slug")
     .action(async (inviteId: string, workspace: string | undefined) => {
       const { config } = await getContext();

@@ -37,16 +37,16 @@ export function createProgram(): Command {
 
   program
     .name("jet")
-    .description("Command line interface for Just Easy Tasks")
+    .description("Manage Just Easy Tasks workspaces, projects, tasks, and metadata")
     .version("0.1.0")
-    .option("--api-url <url>", "JET API base URL")
-    .option("--api-key <key>", "JET API key")
-    .option("-w, --workspace <slug>", "workspace slug")
-    .option("-p, --project <key>", "project key")
-    .option("--json", "print machine-readable JSON")
-    .option("--no-cache", "disable client-side cache reads and writes")
-    .option("--refresh", "bypass cached reads and update cache entries")
-    .option("--no-input", "disable interactive prompts");
+    .option("--api-url <url>", "API base URL")
+    .option("--api-key <key>", "API key for X-API-Key authentication")
+    .option("-w, --workspace <slug>", "workspace slug to use for this command")
+    .option("-p, --project <key>", "project key to use for this command")
+    .option("--json", "print JSON for scripts and agents")
+    .option("--no-cache", "skip cache reads and writes")
+    .option("--refresh", "fetch fresh data and update cache entries")
+    .option("--no-input", "fail instead of prompting for confirmation");
 
   const getContext = () => loadRuntimeContext(rootOptions(program));
 
@@ -109,7 +109,7 @@ async function handleError(error: unknown, program: Command): Promise<void> {
   }
 
   if (error instanceof JetApiError) {
-    writeError("api_error", error.message, json, {
+    writeError("api_error", formatApiError(error), json, {
       status: error.status,
       detail: error.detail,
     });
@@ -135,4 +135,8 @@ function writeError(
     return;
   }
   console.error(message);
+}
+
+function formatApiError(error: JetApiError): string {
+  return `JET API request failed with HTTP ${error.status}: ${error.message}`;
 }

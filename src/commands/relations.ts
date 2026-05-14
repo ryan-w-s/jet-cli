@@ -20,18 +20,23 @@ import {
 } from "./shared.js";
 
 export function createLinkCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("link").description("Manage task links");
+  const command = new Command("link").description("Manage relationships between tasks");
 
-  command.command("list").argument("<task>").action(async (task: string) => {
-    const { api, config, resolved } = await resolve(getContext, task);
-    printList(config.output, await api.listTaskLinks(resolved));
-  });
+  command
+    .command("list")
+    .description("List links for a task")
+    .argument("<task>", "task ref, number, or title fragment")
+    .action(async (task: string) => {
+      const { api, config, resolved } = await resolve(getContext, task);
+      printList(config.output, await api.listTaskLinks(resolved));
+    });
 
   command
     .command("create")
-    .argument("<task>")
-    .argument("<target-task>")
-    .option("--type <relationship>", "relationship type", "relates_to")
+    .description("Link one task to another")
+    .argument("<task>", "source task ref, number, or title fragment")
+    .argument("<target-task>", "target task ref, number, or title fragment")
+    .option("--type <relationship>", "relationship type, such as relates_to or blocks", "relates_to")
     .action(
       async (
         task: string,
@@ -58,13 +63,14 @@ export function createLinkCommand(getContext: () => Promise<RuntimeContext>): Co
 
   command
     .command("update")
-    .argument("<task>")
-    .argument("<link-id>")
-    .option("--type <relationship>", "relationship type")
+    .description("Update a task link relationship type")
+    .argument("<task>", "task ref, number, or title fragment")
+    .argument("<link-id>", "task link ID")
+    .option("--type <relationship>", "new relationship type")
     .action(async (task: string, linkId: string, options: { type?: string }) => {
       const { api, config, resolved } = await resolve(getContext, task);
       if (!options.type) {
-        throw new CliUsageError("Pass --type <relationship>.");
+        throw new CliUsageError("Relationship type is required. Pass --type <relationship>.");
       }
       printOne(
         config.output,
@@ -78,8 +84,9 @@ export function createLinkCommand(getContext: () => Promise<RuntimeContext>): Co
 
   command
     .command("delete")
-    .argument("<task>")
-    .argument("<link-id>")
+    .description("Delete a task link")
+    .argument("<task>", "task ref, number, or title fragment")
+    .argument("<link-id>", "task link ID")
     .option("--force", "delete without prompting")
     .action(async (task: string, linkId: string, options: DestructiveOptions) => {
       const context = await getContext();
@@ -93,18 +100,23 @@ export function createLinkCommand(getContext: () => Promise<RuntimeContext>): Co
 }
 
 export function createReferenceCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("reference").description("Manage task references");
+  const command = new Command("reference").description("Manage external references attached to tasks");
 
-  command.command("list").argument("<task>").action(async (task: string) => {
-    const { api, config, resolved } = await resolve(getContext, task);
-    printList(config.output, await api.listTaskReferences(resolved));
-  });
+  command
+    .command("list")
+    .description("List external references for a task")
+    .argument("<task>", "task ref, number, or title fragment")
+    .action(async (task: string) => {
+      const { api, config, resolved } = await resolve(getContext, task);
+      printList(config.output, await api.listTaskReferences(resolved));
+    });
 
   command
     .command("create")
-    .argument("<task>")
-    .argument("<url>")
-    .option("--title <title>")
+    .description("Attach an external URL to a task")
+    .argument("<task>", "task ref, number, or title fragment")
+    .argument("<url>", "external URL")
+    .option("--title <title>", "reference title")
     .action(async (task: string, url: string, options: { title?: string }) => {
       const { api, config, resolved } = await resolve(getContext, task);
       printOne(
@@ -115,10 +127,11 @@ export function createReferenceCommand(getContext: () => Promise<RuntimeContext>
 
   command
     .command("update")
-    .argument("<task>")
-    .argument("<reference-id>")
-    .argument("<url>")
-    .option("--title <title>")
+    .description("Update a task reference")
+    .argument("<task>", "task ref, number, or title fragment")
+    .argument("<reference-id>", "reference ID")
+    .argument("<url>", "new external URL")
+    .option("--title <title>", "new reference title")
     .action(
       async (
         task: string,
@@ -141,8 +154,9 @@ export function createReferenceCommand(getContext: () => Promise<RuntimeContext>
 
   command
     .command("delete")
-    .argument("<task>")
-    .argument("<reference-id>")
+    .description("Delete a task reference")
+    .argument("<task>", "task ref, number, or title fragment")
+    .argument("<reference-id>", "reference ID")
     .option("--force", "delete without prompting")
     .action(
       async (
@@ -166,23 +180,28 @@ export function createReferenceCommand(getContext: () => Promise<RuntimeContext>
 }
 
 export function createBoardCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("board").description("Manage project boards");
+  const command = new Command("board").description("Manage saved task-filter boards");
 
-  command.command("list").action(async () => {
+  command.command("list").description("List boards in the active project").action(async () => {
     const { api, config, workspaceSlug, projectKey } = await projectContext(getContext);
     printList(config.output, await api.listBoards({ workspaceSlug, projectKey }));
   });
 
-  command.command("get").argument("<key>").action(async (boardKey: string) => {
-    const { api, config, workspaceSlug, projectKey } = await projectContext(getContext);
-    printOne(config.output, await api.getBoard({ workspaceSlug, projectKey, boardKey }));
-  });
+  command
+    .command("get")
+    .description("Show a board")
+    .argument("<key>", "board key")
+    .action(async (boardKey: string) => {
+      const { api, config, workspaceSlug, projectKey } = await projectContext(getContext);
+      printOne(config.output, await api.getBoard({ workspaceSlug, projectKey, boardKey }));
+    });
 
   command
     .command("create")
-    .argument("<key>")
-    .argument("<name>")
-    .option("--description <text>")
+    .description("Create a board from task filters")
+    .argument("<key>", "board key")
+    .argument("<name>", "board name")
+    .option("--description <text>", "board description")
     .option("--filters <json>", "JSON object of task filters")
     .action(
       async (
@@ -211,9 +230,10 @@ export function createBoardCommand(getContext: () => Promise<RuntimeContext>): C
 
   command
     .command("update")
-    .argument("<key>")
-    .option("--name <name>")
-    .option("--description <text>")
+    .description("Update a board")
+    .argument("<key>", "board key")
+    .option("--name <name>", "new board name")
+    .option("--description <text>", "new board description")
     .option("--filters <json>", "JSON object of task filters")
     .action(
       async (
@@ -244,7 +264,8 @@ export function createBoardCommand(getContext: () => Promise<RuntimeContext>): C
 
   command
     .command("delete")
-    .argument("<key>")
+    .description("Delete a board")
+    .argument("<key>", "board key")
     .option("--force", "delete without prompting")
     .action(async (boardKey: string, options: DestructiveOptions) => {
       const context = await getContext();

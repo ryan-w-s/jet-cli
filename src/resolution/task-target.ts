@@ -52,17 +52,17 @@ export async function resolveTaskTarget(
   }
   if (result.status === "ambiguous") {
     if (!result.candidates || result.candidates.length === 0) {
-      throw new CliUsageError("Task resolver returned an ambiguous result without candidates.");
+      throw new CliUsageError(`Task target "${options.target}" is ambiguous, but the API did not return candidates. Try a full task ref such as JET-123.`);
     }
     throw new AmbiguousTaskError(options.target, result.candidates);
   }
-  throw new CliUsageError(`No task found for "${options.target}".`);
+  throw new CliUsageError(`No task found for "${options.target}". Try a full ref such as JET-123, or set the default project before using a number.`);
 }
 
 export function requireWorkspace(workspace: string | undefined): string {
   if (!workspace) {
     throw new CliUsageError(
-      "Workspace is required. Pass --workspace, set JET_WORKSPACE, or run `jet use workspace <slug>`.",
+      "Workspace is required. Pass --workspace <slug>, set JET_WORKSPACE, or run `jet use workspace <slug>`.",
     );
   }
   return workspace;
@@ -71,7 +71,7 @@ export function requireWorkspace(workspace: string | undefined): string {
 export function requireProject(project: string | undefined): string {
   if (!project) {
     throw new CliUsageError(
-      "Project is required. Pass --project, set JET_PROJECT, or run `jet use project <key>`.",
+      "Project is required. Pass --project <key>, set JET_PROJECT, or run `jet use project <key>`.",
     );
   }
   return project;
@@ -126,7 +126,7 @@ function taskToCoordinates(
   task: Task,
 ): TaskCoordinates & { task: Task } {
   if (!task.project_key) {
-    throw new CliUsageError("Resolved task did not include a project key.");
+    throw new CliUsageError("The API resolved the task but did not include its project key. Try a full task ref such as JET-123.");
   }
   return {
     workspaceSlug,

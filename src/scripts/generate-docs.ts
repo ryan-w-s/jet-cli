@@ -63,6 +63,15 @@ function renderIndex(program: Command): string {
 }
 
 function renderCommandPage(command: Command): string {
+  const options = command.options.length > 0
+    ? [
+        "## Options",
+        "",
+        renderOptions(command.options),
+        "",
+      ]
+    : [];
+
   return [
     "---",
     `title: jet ${command.name()}`,
@@ -79,46 +88,51 @@ function renderCommandPage(command: Command): string {
     `jet ${command.name()} [command] [options]`,
     "```",
     "",
-    "## Options",
-    "",
-    renderOptions(command.options),
-    "",
+    ...options,
     "## Subcommands",
     "",
-    renderSubcommands(command),
+    renderSubcommands(command, [`jet ${command.name()}`]),
     "",
   ].join("\n");
 }
 
-function renderSubcommands(command: Command): string {
+function renderSubcommands(command: Command, parents: string[]): string {
   if (command.commands.length === 0) {
     return "This command has no subcommands.";
   }
 
-  return command.commands.map((subcommand) => renderSubcommand(command, subcommand)).join("\n\n");
+  return command.commands
+    .map((subcommand) => renderSubcommand(parents, subcommand))
+    .join("\n\n");
 }
 
-function renderSubcommand(parent: Command, command: Command): string {
+function renderSubcommand(parents: string[], command: Command): string {
+  const args = getArguments(command);
   const usageParts = [
-    "jet",
-    parent.name(),
+    ...parents,
     command.name(),
-    ...getArguments(command).map(formatArgument),
+    ...args.map(formatArgument),
     command.options.length > 0 ? "[options]" : undefined,
   ].filter(Boolean);
 
-  return [
+  const sections = [
     `### \`${usageParts.join(" ")}\``,
-    "",
     command.description() || "No description provided.",
-    "",
-    getArguments(command).length > 0 ? "Arguments:" : "",
-    getArguments(command).length > 0 ? renderArguments(getArguments(command)) : "",
-    command.options.length > 0 ? "Options:" : "",
-    command.options.length > 0 ? renderOptions(command.options) : "",
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
+  ];
+
+  if (args.length > 0) {
+    sections.push(["Arguments:", renderArguments(args)].join("\n"));
+  }
+
+  if (command.options.length > 0) {
+    sections.push(["Options:", renderOptions(command.options)].join("\n"));
+  }
+
+  if (command.commands.length > 0) {
+    sections.push(renderSubcommands(command, [...parents, command.name()]));
+  }
+
+  return sections.join("\n\n");
 }
 
 function renderArguments(args: ArgumentLike[]): string {

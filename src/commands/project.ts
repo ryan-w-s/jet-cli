@@ -14,7 +14,7 @@ import {
 } from "./shared.js";
 
 export function createProjectCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("project").description("Work with projects");
+  const command = new Command("project").description("List, create, update, and delete projects");
 
   command
     .command("list")
@@ -34,7 +34,7 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
 
   command
     .command("get")
-    .description("Get a project")
+    .description("Show a project")
     .argument("[project]", "project key")
     .argument("[workspace]", "workspace slug")
     .action(async (project: string | undefined, workspace: string | undefined) => {
@@ -50,10 +50,10 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
   command
     .command("create")
     .description("Create a project")
-    .argument("<key>")
-    .argument("<name>")
+    .argument("<key>", "project key used in task refs, for example JET")
+    .argument("<name>", "project name")
     .argument("[workspace]", "workspace slug")
-    .option("--description <text>")
+    .option("--description <text>", "project description")
     .action(
       async (
         key: string,
@@ -76,8 +76,8 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
     .description("Update a project")
     .argument("[project]", "project key")
     .argument("[workspace]", "workspace slug")
-    .option("--name <name>")
-    .option("--description <text>")
+    .option("--name <name>", "new project name")
+    .option("--description <text>", "new project description")
     .action(
       async (
         project: string | undefined,

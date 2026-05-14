@@ -46,8 +46,8 @@ export function createCacheCommand(getContext: () => Promise<RuntimeContext>): C
 
   command
     .command("clear")
-    .description("Clear cached API responses")
-    .option("--all", "clear all cache entries, not just the current API key scope")
+    .description("Clear cached API responses for the current API key scope")
+    .option("--all", "clear every cache entry for every API URL and API key")
     .action(async (options: ClearOptions) => {
       const { config } = await getContext();
       const store = new JsonCacheStore(defaultCacheFile());

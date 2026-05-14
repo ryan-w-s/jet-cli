@@ -1,6 +1,6 @@
 # JET CLI
 
-Command line interface for Just Easy Tasks.
+Manage Just Easy Tasks from the command line.
 
 JET is API-first, and the CLI mirrors that shape while keeping common task
 workflows short for humans and predictable for agents.
@@ -32,17 +32,19 @@ jet use project JET
 jet auth status
 ```
 
-The CLI uses `https://justeasytasks.com` by default. To point at another API,
-set `--api-url`, `JET_API_URL`, or `jet config set api-url <url>`.
+The CLI uses `https://justeasytasks.com` by default. To use another API, pass
+`--api-url`, set `JET_API_URL`, or run `jet config set api-url <url>`.
 
-Config precedence is:
+When the same setting is provided in multiple places, later sources override
+earlier ones:
 
-1. User config: `%APPDATA%/jet/config.json` on Windows, otherwise
+1. Built-in defaults.
+2. User config: `%APPDATA%/jet/config.json` on Windows, otherwise
    `$XDG_CONFIG_HOME/jet/config.json` or `~/.config/jet/config.json`.
-2. Local project config found by walking up to `.jet/config.json`.
-3. Environment variables: `JET_API_URL`, `JET_API_KEY`, `JET_WORKSPACE`,
+3. Local project config found by walking up to `.jet/config.json`.
+4. Environment variables: `JET_API_URL`, `JET_API_KEY`, `JET_WORKSPACE`,
    `JET_PROJECT`, `JET_OUTPUT`.
-4. CLI flags: `--api-url`, `--api-key`, `--workspace`, `--project`, `--json`.
+5. CLI flags: `--api-url`, `--api-key`, `--workspace`, `--project`, `--json`.
 
 API keys are stored as plaintext when saved with `jet config set api-key`.
 Use environment variables or your platform secret manager if local plaintext

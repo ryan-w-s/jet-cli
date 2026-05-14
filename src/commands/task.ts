@@ -37,14 +37,14 @@ type TaskDoneOptions = {
 };
 
 export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Command {
-  const command = new Command("task").description("Work with tasks");
+  const command = new Command("task").description("List, create, inspect, update, and delete tasks");
 
   command
     .command("list")
-    .description("List tasks in the current workspace")
-    .argument("[query]", "optional title search")
-    .option("--status <key>", "filter by status key")
-    .option("--assignee <uuid>", "filter by assignee user ID")
+    .description("List tasks in the active workspace, optionally narrowed by project")
+    .argument("[query]", "search task titles")
+    .option("--status <key>", "only show tasks with this status key")
+    .option("--assignee <uuid>", "only show tasks assigned to this user ID")
     .action(
       async (
         query: string | undefined,
@@ -70,8 +70,8 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
 
   command
     .command("get")
-    .description("Get a task by ref, number, or title fragment")
-    .argument("<target>")
+    .description("Show a task by ref, number, or title fragment")
+    .argument("<target>", "task ref like JET-123, workspace-scoped ref like acme/JET-123, number, or title fragment")
     .action(async (target: string) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -91,14 +91,14 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
   command
     .command("create")
     .description("Create a task in the current project")
-    .argument("<title>")
-    .option("--description <text>")
-    .option("--status <key>")
-    .option("--type <key>")
-    .option("--priority <key>")
-    .option("--label <key...>")
-    .option("--assignee <uuid>")
-    .option("--parent <target>")
+    .argument("<title>", "task title")
+    .option("--description <text>", "task description")
+    .option("--status <key>", "initial status key")
+    .option("--type <key>", "task type key")
+    .option("--priority <key>", "priority key")
+    .option("--label <key...>", "label keys to apply")
+    .option("--assignee <uuid>", "assignee user ID")
+    .option("--parent <target>", "parent task ref, number, or title fragment")
     .action(async (title: string, options: TaskCreateOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -131,15 +131,15 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
   command
     .command("update")
     .description("Update a task")
-    .argument("<target>")
-    .option("--title <title>")
-    .option("--description <text>")
-    .option("--status <key>")
-    .option("--type <key>")
-    .option("--priority <key>")
-    .option("--label <key...>")
-    .option("--assignee <uuid>")
-    .option("--parent <target>")
+    .argument("<target>", "task ref, number, or title fragment")
+    .option("--title <title>", "replace the task title")
+    .option("--description <text>", "replace the task description")
+    .option("--status <key>", "set status by key")
+    .option("--type <key>", "set task type by key")
+    .option("--priority <key>", "set priority by key")
+    .option("--label <key...>", "replace labels with these label keys")
+    .option("--assignee <uuid>", "set assignee user ID")
+    .option("--parent <target>", "set parent task by ref, number, or title fragment")
     .action(async (target: string, options: TaskUpdateOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -177,8 +177,8 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
   command
     .command("done")
     .description("Move a task to the project's done status")
-    .argument("<target>")
-    .option("--status <key>", "explicit done status key")
+    .argument("<target>", "task ref, number, or title fragment")
+    .option("--status <key>", "done status key to use instead of auto-detection")
     .action(async (target: string, options: TaskDoneOptions) => {
       const { config } = await getContext();
       const api = new JetApi(requireApiConfig(config));
@@ -207,7 +207,7 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
   command
     .command("delete")
     .description("Delete a task")
-    .argument("<target>")
+    .argument("<target>", "task ref, number, or title fragment")
     .option("--force", "delete without prompting")
     .action(async (target: string, options: DestructiveOptions) => {
       const context = await getContext();
@@ -285,6 +285,6 @@ export async function resolveDoneStatus(
     return conventional.key;
   }
   throw new CliUsageError(
-    "Could not infer a done status for this project. Pass `--status <key>`.",
+    `Could not infer a done status for project ${projectKey}. Pass --status <key>, or create a status with category "done".`,
   );
 }
