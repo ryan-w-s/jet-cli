@@ -37,6 +37,8 @@ export type Label = components["schemas"]["LabelRead"];
 export type LabelCreate = components["schemas"]["LabelCreate"];
 export type LabelUpdate = components["schemas"]["LabelUpdate"];
 export type Task = components["schemas"]["TaskRead"];
+export type SearchResult = components["schemas"]["SearchResultRead"];
+export type SearchSort = components["schemas"]["SearchResultRead"]["sort"];
 export type TaskRef = components["schemas"]["TaskRef"];
 export type TaskCreate = components["schemas"]["TaskCreate"];
 export type TaskUpdate = components["schemas"]["TaskUpdate"];
@@ -532,6 +534,20 @@ export class JetApi {
     );
   }
 
+  async searchAll(options: SearchOptions = {}): Promise<SearchResult> {
+    return this.get("/api/search", {}, searchQuery(options));
+  }
+
+  async searchWorkspace(options: SearchOptions & {
+    workspaceSlug: string;
+  }): Promise<SearchResult> {
+    return this.get(
+      "/api/workspaces/{workspace_slug}/search",
+      { workspace_slug: options.workspaceSlug },
+      searchQuery(options),
+    );
+  }
+
   async listProjectTasks(options: {
     workspaceSlug: string;
     projectKey: string;
@@ -964,6 +980,52 @@ type HttpMethod = (
   path: keyof paths,
   options?: Record<string, unknown>,
 ) => Promise<{ data?: unknown; error?: unknown; response: Response }>;
+
+type SearchOptions = {
+  q?: string;
+  type?: "all" | "workspaces" | "projects" | "tasks";
+  sort?: SearchSort;
+  projectKey?: string;
+  statusKey?: string;
+  typeKey?: string;
+  priorityKey?: string;
+  labelKey?: string;
+  assigneeUserId?: string;
+  reporterUserId?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  updatedAfter?: string;
+  updatedBefore?: string;
+  limit?: number;
+  offset?: number;
+};
+
+function searchQuery(options: SearchOptions): Record<string, unknown> {
+  return compactQuery({
+    q: options.q,
+    type: options.type,
+    sort: options.sort,
+    projectKey: options.projectKey,
+    statusKey: options.statusKey,
+    typeKey: options.typeKey,
+    priorityKey: options.priorityKey,
+    labelKey: options.labelKey,
+    assigneeUserId: options.assigneeUserId,
+    reporterUserId: options.reporterUserId,
+    createdAfter: options.createdAfter,
+    createdBefore: options.createdBefore,
+    updatedAfter: options.updatedAfter,
+    updatedBefore: options.updatedBefore,
+    limit: options.limit,
+    offset: options.offset,
+  });
+}
+
+function compactQuery(values: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(values).filter(([, value]) => value !== undefined && value !== ""),
+  );
+}
 
 function taskPath(options: {
   workspaceSlug: string;

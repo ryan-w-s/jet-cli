@@ -1,4 +1,55 @@
 export interface paths {
+    "/api/billing/checkout-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Billing Checkout Session */
+        post: operations["createBillingCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/billing/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Billing Plans */
+        get: operations["listBillingPlans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/billing/portal-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Billing Portal Session */
+        post: operations["createBillingPortalSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -68,6 +119,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search All */
+        get: operations["searchAll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspace-invites/{invite_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Workspace Invite */
+        get: operations["getWorkspaceInvite"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/workspaces": {
         parameters: {
             query?: never;
@@ -103,40 +188,6 @@ export interface paths {
         head?: never;
         /** Update Workspace */
         patch: operations["updateWorkspace"];
-        trace?: never;
-    };
-    "/api/workspace-invites/{invite_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Workspace Invite */
-        get: operations["getWorkspaceInvite"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/members": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Workspace Members */
-        get: operations["listWorkspaceMembers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/workspaces/{workspace_slug}/invites": {
@@ -185,6 +236,23 @@ export interface paths {
         put?: never;
         /** Accept Workspace Invite */
         post: operations["acceptWorkspaceInvite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Workspace Members */
+        get: operations["listWorkspaceMembers"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -245,149 +313,41 @@ export interface paths {
         patch: operations["updateProject"];
         trace?: never;
     };
-    "/api/workspaces/{workspace_slug}/task-types": {
+    "/api/workspaces/{workspace_slug}/projects/{project_key}/boards": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Task Types */
-        get: operations["listTaskTypes"];
+        /** List Boards */
+        get: operations["listBoards"];
         put?: never;
-        /** Create Task Type */
-        post: operations["createTaskType"];
+        /** Create Board */
+        post: operations["createBoard"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/workspaces/{workspace_slug}/task-types/{type_key}": {
+    "/api/workspaces/{workspace_slug}/projects/{project_key}/boards/{board_key}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Task Type */
-        get: operations["getTaskType"];
+        /** Get Board */
+        get: operations["getBoard"];
         put?: never;
         post?: never;
-        /** Delete Task Type */
-        delete: operations["deleteTaskType"];
+        /** Delete Board */
+        delete: operations["deleteBoard"];
         options?: never;
         head?: never;
-        /** Update Task Type */
-        patch: operations["updateTaskType"];
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/task-priorities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Task Priorities */
-        get: operations["listTaskPriorities"];
-        put?: never;
-        /** Create Task Priority */
-        post: operations["createTaskPriority"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/task-priorities/{priority_key}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Task Priority */
-        get: operations["getTaskPriority"];
-        put?: never;
-        post?: never;
-        /** Delete Task Priority */
-        delete: operations["deleteTaskPriority"];
-        options?: never;
-        head?: never;
-        /** Update Task Priority */
-        patch: operations["updateTaskPriority"];
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/tasks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Workspace Tasks */
-        get: operations["listWorkspaceTasks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/tasks/resolve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Resolve Task */
-        get: operations["resolveTask"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/projects/{project_key}/statuses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Project Statuses */
-        get: operations["listProjectStatuses"];
-        put?: never;
-        /** Create Task Status */
-        post: operations["createTaskStatus"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/workspaces/{workspace_slug}/projects/{project_key}/statuses/{status_key}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Task Status */
-        get: operations["getTaskStatus"];
-        put?: never;
-        post?: never;
-        /** Delete Task Status */
-        delete: operations["deleteTaskStatus"];
-        options?: never;
-        head?: never;
-        /** Update Task Status */
-        patch: operations["updateTaskStatus"];
+        /** Update Board */
+        patch: operations["updateBoard"];
         trace?: never;
     };
     "/api/workspaces/{workspace_slug}/projects/{project_key}/labels": {
@@ -425,6 +385,43 @@ export interface paths {
         head?: never;
         /** Update Label */
         patch: operations["updateLabel"];
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/projects/{project_key}/statuses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Project Statuses */
+        get: operations["listProjectStatuses"];
+        put?: never;
+        /** Create Task Status */
+        post: operations["createTaskStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/projects/{project_key}/statuses/{status_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Task Status */
+        get: operations["getTaskStatus"];
+        put?: never;
+        post?: never;
+        /** Delete Task Status */
+        delete: operations["deleteTaskStatus"];
+        options?: never;
+        head?: never;
+        /** Update Task Status */
+        patch: operations["updateTaskStatus"];
         trace?: never;
     };
     "/api/workspaces/{workspace_slug}/projects/{project_key}/tasks": {
@@ -572,41 +569,129 @@ export interface paths {
         patch: operations["updateTaskReference"];
         trace?: never;
     };
-    "/api/workspaces/{workspace_slug}/projects/{project_key}/boards": {
+    "/api/workspaces/{workspace_slug}/search": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Boards */
-        get: operations["listBoards"];
+        /** Search Workspace */
+        get: operations["searchWorkspace"];
         put?: never;
-        /** Create Board */
-        post: operations["createBoard"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/workspaces/{workspace_slug}/projects/{project_key}/boards/{board_key}": {
+    "/api/workspaces/{workspace_slug}/task-priorities": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Board */
-        get: operations["getBoard"];
+        /** List Task Priorities */
+        get: operations["listTaskPriorities"];
         put?: never;
-        post?: never;
-        /** Delete Board */
-        delete: operations["deleteBoard"];
+        /** Create Task Priority */
+        post: operations["createTaskPriority"];
+        delete?: never;
         options?: never;
         head?: never;
-        /** Update Board */
-        patch: operations["updateBoard"];
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/task-priorities/{priority_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Task Priority */
+        get: operations["getTaskPriority"];
+        put?: never;
+        post?: never;
+        /** Delete Task Priority */
+        delete: operations["deleteTaskPriority"];
+        options?: never;
+        head?: never;
+        /** Update Task Priority */
+        patch: operations["updateTaskPriority"];
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/task-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Task Types */
+        get: operations["listTaskTypes"];
+        put?: never;
+        /** Create Task Type */
+        post: operations["createTaskType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/task-types/{type_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Task Type */
+        get: operations["getTaskType"];
+        put?: never;
+        post?: never;
+        /** Delete Task Type */
+        delete: operations["deleteTaskType"];
+        options?: never;
+        head?: never;
+        /** Update Task Type */
+        patch: operations["updateTaskType"];
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Workspace Tasks */
+        get: operations["listWorkspaceTasks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_slug}/tasks/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Resolve Task */
+        get: operations["resolveTask"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -621,44 +706,44 @@ export interface components {
         /** APIKeyRead */
         APIKeyRead: {
             /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string;
-            /** Key Prefix */
-            key_prefix: string;
-            /** Is Active */
-            is_active: boolean;
-            /** Last Used At */
-            last_used_at: string | null;
-            /**
              * Created At
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Key Prefix */
+            key_prefix: string;
+            /** Last Used At */
+            last_used_at: string | null;
+            /** Name */
+            name: string;
         };
         /** APIKeyWithSecret */
         APIKeyWithSecret: {
             /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string;
-            /** Key Prefix */
-            key_prefix: string;
-            /** Is Active */
-            is_active: boolean;
-            /** Last Used At */
-            last_used_at: string | null;
-            /**
              * Created At
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Key Prefix */
+            key_prefix: string;
+            /** Last Used At */
+            last_used_at: string | null;
+            /** Name */
+            name: string;
             /** Secret */
             secret: string;
         };
@@ -666,37 +751,87 @@ export interface components {
         AuthActorRead: {
             /** Auth Type */
             auth_type: string;
+            billing?: components["schemas"]["BillingSubscriptionRead"] | null;
+            /**
+             * Plan Tier
+             * @enum {string}
+             */
+            plan_tier: "free" | "personal" | "pro";
             user: components["schemas"]["UserRead"];
+        };
+        /** BillingPlanPriceRead */
+        BillingPlanPriceRead: {
+            /** Interval Label */
+            interval_label: string;
+            /** Is Configured */
+            is_configured: boolean;
+            /** Label */
+            label: string;
+            /**
+             * Period
+             * @enum {string}
+             */
+            period: "month" | "year";
+        };
+        /** BillingPlanRead */
+        BillingPlanRead: {
+            /** Description */
+            description: string;
+            /** Features */
+            features: string[];
+            /** Name */
+            name: string;
+            /** Prices */
+            prices: components["schemas"]["BillingPlanPriceRead"][];
+            /**
+             * Tier
+             * @enum {string}
+             */
+            tier: "personal" | "pro";
+        };
+        /** BillingRedirectRead */
+        BillingRedirectRead: {
+            /** Url */
+            url: string;
+        };
+        /** BillingSubscriptionRead */
+        BillingSubscriptionRead: {
+            /** Cancel At Period End */
+            cancel_at_period_end: boolean;
+            /** Current Period End */
+            current_period_end: string | null;
+            /** Current Period Start */
+            current_period_start: string | null;
+            /** Has Stripe Customer */
+            has_stripe_customer: boolean;
+            /**
+             * Plan Tier
+             * @enum {string}
+             */
+            plan_tier: "free" | "personal" | "pro";
+            /** Status */
+            status: string | null;
         };
         /** BoardCreate */
         BoardCreate: {
-            /** Key */
-            key: string;
-            /** Name */
-            name: string;
             /** Description */
             description?: string | null;
             /** Filters */
             filters?: {
                 [key: string]: unknown;
             };
-        };
-        /** BoardRead */
-        BoardRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Project Id
-             * Format: uuid
-             */
-            project_id: string;
             /** Key */
             key: string;
             /** Name */
             name: string;
+        };
+        /** BoardRead */
+        BoardRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
             /** Description */
             description: string | null;
             /** Filters */
@@ -704,10 +839,19 @@ export interface components {
                 [key: string]: unknown;
             };
             /**
-             * Created At
-             * Format: date-time
+             * Id
+             * Format: uuid
              */
-            created_at: string;
+            id: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
             /**
              * Updated At
              * Format: date-time
@@ -716,14 +860,27 @@ export interface components {
         };
         /** BoardUpdate */
         BoardUpdate: {
-            /** Name */
-            name?: string | null;
             /** Description */
             description?: string | null;
             /** Filters */
             filters?: {
                 [key: string]: unknown;
             } | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** CheckoutSessionCreate */
+        CheckoutSessionCreate: {
+            /**
+             * Period
+             * @enum {string}
+             */
+            period: "month" | "year";
+            /**
+             * Tier
+             * @enum {string}
+             */
+            tier: "personal" | "pro";
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -732,29 +889,15 @@ export interface components {
         };
         /** LabelCreate */
         LabelCreate: {
+            /** Color */
+            color?: string | null;
             /** Key */
             key: string;
             /** Name */
             name: string;
-            /** Color */
-            color?: string | null;
         };
         /** LabelRead */
         LabelRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Project Id
-             * Format: uuid
-             */
-            project_id: string;
-            /** Key */
-            key: string;
-            /** Name */
-            name: string;
             /** Color */
             color: string | null;
             /**
@@ -763,6 +906,20 @@ export interface components {
              */
             created_at: string;
             /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /**
              * Updated At
              * Format: date-time
              */
@@ -770,55 +927,195 @@ export interface components {
         };
         /** LabelUpdate */
         LabelUpdate: {
-            /** Name */
-            name?: string | null;
             /** Color */
             color?: string | null;
+            /** Name */
+            name?: string | null;
         };
         /** ProjectCreate */
         ProjectCreate: {
+            /** Description */
+            description?: string | null;
             /** Key */
             key: string;
             /** Name */
             name: string;
-            /** Description */
-            description?: string | null;
         };
         /** ProjectRead */
         ProjectRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Workspace Id
-             * Format: uuid
-             */
-            workspace_id: string;
-            /** Key */
-            key: string;
-            /** Name */
-            name: string;
-            /** Description */
-            description: string | null;
             /**
              * Created At
              * Format: date-time
              */
             created_at: string;
+            /** Description */
+            description: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
             /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** ProjectUpdate */
         ProjectUpdate: {
-            /** Name */
-            name?: string | null;
             /** Description */
             description?: string | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** SearchCountsRead */
+        SearchCountsRead: {
+            /**
+             * Projects
+             * @default 0
+             */
+            projects: number;
+            /**
+             * Tasks
+             * @default 0
+             */
+            tasks: number;
+            /**
+             * Workspaces
+             * @default 0
+             */
+            workspaces: number;
+        };
+        /** SearchProjectRead */
+        SearchProjectRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Workspace Name */
+            workspace_name: string;
+            /** Workspace Slug */
+            workspace_slug: string;
+        };
+        /** SearchResultRead */
+        SearchResultRead: {
+            counts: components["schemas"]["SearchCountsRead"];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Projects */
+            projects?: components["schemas"]["SearchProjectRead"][];
+            /** Query */
+            query?: string | null;
+            /**
+             * Scope
+             * @enum {string}
+             */
+            scope: "global" | "workspace";
+            /**
+             * Sort
+             * @enum {string}
+             */
+            sort: "relevance" | "updated_desc" | "created_desc" | "title_asc";
+            /** Tasks */
+            tasks?: components["schemas"]["SearchTaskRead"][];
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "all" | "workspaces" | "projects" | "tasks";
+            /** Workspaces */
+            workspaces?: components["schemas"]["WorkspaceRead"][];
+        };
+        /** SearchTaskRead */
+        SearchTaskRead: {
+            /** Assignee User Id */
+            assignee_user_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string | null;
+            /** Display Ref */
+            display_ref?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Labels */
+            labels?: components["schemas"]["TaskLabelRead"][];
+            /** Number */
+            number: number;
+            /** Parent Task Id */
+            parent_task_id: string | null;
+            /** Priority Id */
+            priority_id: string | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Project Key */
+            project_key?: string | null;
+            /** Project Name */
+            project_name: string;
+            /** Reporter User Id */
+            reporter_user_id: string | null;
+            /** Status Id */
+            status_id: string | null;
+            /** Title */
+            title: string;
+            /** Type Id */
+            type_id: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Workspace Name */
+            workspace_name: string;
+            /** Workspace Slug */
+            workspace_slug: string;
         };
         /** TaskCommentCreate */
         TaskCommentCreate: {
@@ -827,6 +1124,15 @@ export interface components {
         };
         /** TaskCommentRead */
         TaskCommentRead: {
+            /** Author User Id */
+            author_user_id: string | null;
+            /** Body */
+            body: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
             /**
              * Id
              * Format: uuid
@@ -837,15 +1143,6 @@ export interface components {
              * Format: uuid
              */
             task_id: string;
-            /** Author User Id */
-            author_user_id: string | null;
-            /** Body */
-            body: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
             /**
              * Updated At
              * Format: date-time
@@ -859,52 +1156,54 @@ export interface components {
         };
         /** TaskCreate */
         TaskCreate: {
-            /** Title */
-            title: string;
-            /** Description */
-            description?: string | null;
-            /** Status Key */
-            status_key?: string | null;
-            /** Type Key */
-            type_key?: string | null;
-            /** Priority Key */
-            priority_key?: string | null;
-            /** Label Keys */
-            label_keys?: string[] | null;
             /** Assignee User Id */
             assignee_user_id?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Label Keys */
+            label_keys?: string[] | null;
             parent_task?: components["schemas"]["TaskRef"] | null;
+            /** Priority Key */
+            priority_key?: string | null;
+            /** Status Key */
+            status_key?: string | null;
+            /** Title */
+            title: string;
+            /** Type Key */
+            type_key?: string | null;
         };
         /** TaskLabelRead */
         TaskLabelRead: {
+            /** Color */
+            color: string | null;
             /** Key */
             key: string;
             /** Name */
             name: string;
-            /** Color */
-            color: string | null;
         };
         /** TaskLinkCreate */
         TaskLinkCreate: {
-            target_task: components["schemas"]["TaskRef"];
             /**
              * Relationship Type
              * @default relates_to
              */
             relationship_type: string;
+            target_task: components["schemas"]["TaskRef"];
         };
         /** TaskLinkRead */
         TaskLinkRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
             /**
              * Id
              * Format: uuid
              */
             id: string;
-            /**
-             * Workspace Id
-             * Format: uuid
-             */
-            workspace_id: string;
+            /** Relationship Type */
+            relationship_type: string;
             /**
              * Source Task Id
              * Format: uuid
@@ -915,18 +1214,16 @@ export interface components {
              * Format: uuid
              */
             target_task_id: string;
-            /** Relationship Type */
-            relationship_type: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
             /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** TaskLinkUpdate */
         TaskLinkUpdate: {
@@ -948,15 +1245,15 @@ export interface components {
         /** TaskPriorityRead */
         TaskPriorityRead: {
             /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
              * Id
              * Format: uuid
              */
             id: string;
-            /**
-             * Workspace Id
-             * Format: uuid
-             */
-            workspace_id: string;
             /** Key */
             key: string;
             /** Name */
@@ -964,15 +1261,15 @@ export interface components {
             /** Rank */
             rank: number;
             /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** TaskPriorityUpdate */
         TaskPriorityUpdate: {
@@ -983,16 +1280,30 @@ export interface components {
         };
         /** TaskRead */
         TaskRead: {
+            /** Assignee User Id */
+            assignee_user_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string | null;
+            /** Display Ref */
+            display_ref?: string | null;
             /**
              * Id
              * Format: uuid
              */
             id: string;
-            /**
-             * Workspace Id
-             * Format: uuid
-             */
-            workspace_id: string;
+            /** Labels */
+            labels?: components["schemas"]["TaskLabelRead"][];
+            /** Number */
+            number: number;
+            /** Parent Task Id */
+            parent_task_id: string | null;
+            /** Priority Id */
+            priority_id: string | null;
             /**
              * Project Id
              * Format: uuid
@@ -1000,38 +1311,24 @@ export interface components {
             project_id: string;
             /** Project Key */
             project_key?: string | null;
-            /** Display Ref */
-            display_ref?: string | null;
-            /** Number */
-            number: number;
-            /** Title */
-            title: string;
-            /** Description */
-            description: string | null;
-            /** Parent Task Id */
-            parent_task_id: string | null;
-            /** Assignee User Id */
-            assignee_user_id: string | null;
             /** Reporter User Id */
             reporter_user_id: string | null;
             /** Status Id */
             status_id: string | null;
+            /** Title */
+            title: string;
             /** Type Id */
             type_id: string | null;
-            /** Priority Id */
-            priority_id: string | null;
-            /** Labels */
-            labels?: components["schemas"]["TaskLabelRead"][];
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
             /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** TaskRef */
         TaskRef: {
@@ -1053,6 +1350,11 @@ export interface components {
         /** TaskReferenceRead */
         TaskReferenceRead: {
             /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
              * Id
              * Format: uuid
              */
@@ -1064,18 +1366,13 @@ export interface components {
             task_id: string;
             /** Title */
             title: string | null;
-            /** Url */
-            url: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
             /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            /** Url */
+            url: string;
         };
         /** TaskReferenceUpdate */
         TaskReferenceUpdate: {
@@ -1089,23 +1386,23 @@ export interface components {
         };
         /** TaskResolveResult */
         TaskResolveResult: {
+            /** Candidates */
+            candidates?: components["schemas"]["TaskRead"][];
             /**
              * Status
              * @enum {string}
              */
             status: "resolved" | "ambiguous" | "not_found";
             task?: components["schemas"]["TaskRead"] | null;
-            /** Candidates */
-            candidates?: components["schemas"]["TaskRead"][];
         };
         /** TaskStatusCreate */
         TaskStatusCreate: {
+            /** Category */
+            category?: string | null;
             /** Key */
             key: string;
             /** Name */
             name: string;
-            /** Category */
-            category?: string | null;
             /**
              * Rank
              * @default 0
@@ -1114,29 +1411,29 @@ export interface components {
         };
         /** TaskStatusRead */
         TaskStatusRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Project Id
-             * Format: uuid
-             */
-            project_id: string;
-            /** Key */
-            key: string;
-            /** Name */
-            name: string;
             /** Category */
             category: string | null;
-            /** Rank */
-            rank: number;
             /**
              * Created At
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Rank */
+            rank: number;
             /**
              * Updated At
              * Format: date-time
@@ -1145,109 +1442,109 @@ export interface components {
         };
         /** TaskStatusUpdate */
         TaskStatusUpdate: {
-            /** Name */
-            name?: string | null;
             /** Category */
             category?: string | null;
+            /** Name */
+            name?: string | null;
             /** Rank */
             rank?: number | null;
         };
         /** TaskTypeCreate */
         TaskTypeCreate: {
+            /** Description */
+            description?: string | null;
             /** Key */
             key: string;
             /** Name */
             name: string;
-            /** Description */
-            description?: string | null;
         };
         /** TaskTypeRead */
         TaskTypeRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Workspace Id
-             * Format: uuid
-             */
-            workspace_id: string;
-            /** Key */
-            key: string;
-            /** Name */
-            name: string;
-            /** Description */
-            description: string | null;
             /**
              * Created At
              * Format: date-time
              */
             created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-        };
-        /** TaskTypeUpdate */
-        TaskTypeUpdate: {
-            /** Name */
-            name?: string | null;
             /** Description */
-            description?: string | null;
-        };
-        /** TaskUpdate */
-        TaskUpdate: {
-            /** Title */
-            title?: string | null;
-            /** Description */
-            description?: string | null;
-            /** Status Key */
-            status_key?: string | null;
-            /** Type Key */
-            type_key?: string | null;
-            /** Priority Key */
-            priority_key?: string | null;
-            /** Label Keys */
-            label_keys?: string[] | null;
-            /** Assignee User Id */
-            assignee_user_id?: string | null;
-            parent_task?: components["schemas"]["TaskRef"] | null;
-        };
-        /** UserRead */
-        UserRead: {
+            description: string | null;
             /**
              * Id
              * Format: uuid
              */
             id: string;
-            /** Email */
-            email: string | null;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** TaskTypeUpdate */
+        TaskTypeUpdate: {
+            /** Description */
+            description?: string | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** TaskUpdate */
+        TaskUpdate: {
+            /** Assignee User Id */
+            assignee_user_id?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Label Keys */
+            label_keys?: string[] | null;
+            parent_task?: components["schemas"]["TaskRef"] | null;
+            /** Priority Key */
+            priority_key?: string | null;
+            /** Status Key */
+            status_key?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Type Key */
+            type_key?: string | null;
+        };
+        /** UserRead */
+        UserRead: {
             /** Display Name */
             display_name: string | null;
+            /** Email */
+            email: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
         };
         /** ValidationError */
         ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
             /** Location */
             loc: (string | number)[];
             /** Message */
             msg: string;
             /** Error Type */
             type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
         };
         /** WorkspaceCreate */
         WorkspaceCreate: {
-            /** Slug */
-            slug: string;
-            /** Name */
-            name: string;
             /** Description */
             description?: string | null;
+            /** Name */
+            name: string;
+            /** Slug */
+            slug: string;
         };
         /** WorkspaceInviteCreate */
         WorkspaceInviteCreate: {
@@ -1265,81 +1562,81 @@ export interface components {
         };
         /** WorkspaceInviteRead */
         WorkspaceInviteRead: {
+            /** Accepted At */
+            accepted_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            /** Expires At */
+            expires_at: string | null;
             /**
              * Id
              * Format: uuid
              */
             id: string;
+            /** Invited By User Id */
+            invited_by_user_id: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "owner" | "member";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
             /**
              * Workspace Id
              * Format: uuid
              */
             workspace_id: string;
-            /** Workspace Slug */
-            workspace_slug: string;
             /** Workspace Name */
             workspace_name: string;
-            /** Email */
-            email: string;
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "owner" | "member";
-            /** Invited By User Id */
-            invited_by_user_id: string | null;
-            /** Accepted At */
-            accepted_at: string | null;
-            /** Expires At */
-            expires_at: string | null;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
+            /** Workspace Slug */
+            workspace_slug: string;
         };
         /** WorkspaceMemberRead */
         WorkspaceMemberRead: {
-            user: components["schemas"]["UserRead"];
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "owner" | "member";
             /**
              * Created At
              * Format: date-time
              */
             created_at: string;
             /**
+             * Role
+             * @enum {string}
+             */
+            role: "owner" | "member";
+            /**
              * Updated At
              * Format: date-time
              */
             updated_at: string;
+            user: components["schemas"]["UserRead"];
         };
         /** WorkspaceRead */
         WorkspaceRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string | null;
             /**
              * Id
              * Format: uuid
              */
             id: string;
-            /** Slug */
-            slug: string;
             /** Name */
             name: string;
-            /** Description */
-            description: string | null;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
+            /** Slug */
+            slug: string;
             /**
              * Updated At
              * Format: date-time
@@ -1348,10 +1645,10 @@ export interface components {
         };
         /** WorkspaceUpdate */
         WorkspaceUpdate: {
-            /** Name */
-            name?: string | null;
             /** Description */
             description?: string | null;
+            /** Name */
+            name?: string | null;
         };
     };
     responses: never;
@@ -1362,6 +1659,79 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    createBillingCheckoutSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckoutSessionCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingRedirectRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listBillingPlans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingPlanRead"][];
+                };
+            };
+        };
+    };
+    createBillingPortalSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingRedirectRead"];
+                };
+            };
+        };
+    };
     healthcheck: {
         parameters: {
             query?: never;
@@ -1474,6 +1844,83 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    searchAll: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                type?: "all" | "workspaces" | "projects" | "tasks";
+                sort?: "relevance" | "updated_desc" | "created_desc" | "title_asc";
+                projectKey?: string | null;
+                statusKey?: string | null;
+                typeKey?: string | null;
+                priorityKey?: string | null;
+                labelKey?: string | null;
+                assigneeUserId?: string | null;
+                reporterUserId?: string | null;
+                createdAfter?: string | null;
+                createdBefore?: string | null;
+                updatedAfter?: string | null;
+                updatedBefore?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResultRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getWorkspaceInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invite_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceInviteRead"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -1634,68 +2081,6 @@ export interface operations {
             };
         };
     };
-    getWorkspaceInvite: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invite_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WorkspaceInviteRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    listWorkspaceMembers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WorkspaceMemberRead"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     listWorkspaceInvites: {
         parameters: {
             query?: never;
@@ -1811,6 +2196,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WorkspaceRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listWorkspaceMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceMemberRead"][];
                 };
             };
             /** @description Validation Error */
@@ -2018,12 +2434,13 @@ export interface operations {
             };
         };
     };
-    listTaskTypes: {
+    listBoards: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
+                project_key: string;
             };
             cookie?: never;
         };
@@ -2035,7 +2452,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TaskTypeRead"][];
+                    "application/json": components["schemas"]["BoardRead"][];
                 };
             };
             /** @description Validation Error */
@@ -2049,18 +2466,19 @@ export interface operations {
             };
         };
     };
-    createTaskType: {
+    createBoard: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
+                project_key: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TaskTypeCreate"];
+                "application/json": components["schemas"]["BoardCreate"];
             };
         };
         responses: {
@@ -2070,7 +2488,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TaskTypeRead"];
+                    "application/json": components["schemas"]["BoardRead"];
                 };
             };
             /** @description Validation Error */
@@ -2084,13 +2502,14 @@ export interface operations {
             };
         };
     };
-    getTaskType: {
+    getBoard: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                type_key: string;
+                project_key: string;
+                board_key: string;
             };
             cookie?: never;
         };
@@ -2102,7 +2521,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TaskTypeRead"];
+                    "application/json": components["schemas"]["BoardRead"];
                 };
             };
             /** @description Validation Error */
@@ -2116,13 +2535,14 @@ export interface operations {
             };
         };
     };
-    deleteTaskType: {
+    deleteBoard: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                type_key: string;
+                project_key: string;
+                board_key: string;
             };
             cookie?: never;
         };
@@ -2146,422 +2566,20 @@ export interface operations {
             };
         };
     };
-    updateTaskType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                type_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TaskTypeUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskTypeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    listTaskPriorities: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskPriorityRead"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    createTaskPriority: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TaskPriorityCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskPriorityRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    getTaskPriority: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                priority_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskPriorityRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    deleteTaskPriority: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                priority_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    updateTaskPriority: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                priority_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TaskPriorityUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskPriorityRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    listWorkspaceTasks: {
-        parameters: {
-            query?: {
-                projectKey?: string | null;
-                statusKey?: string | null;
-                assigneeUserId?: string | null;
-                q?: string | null;
-            };
-            header?: never;
-            path: {
-                workspace_slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRead"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    resolveTask: {
-        parameters: {
-            query: {
-                target: string;
-                projectKey?: string | null;
-            };
-            header?: never;
-            path: {
-                workspace_slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskResolveResult"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    listProjectStatuses: {
+    updateBoard: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
                 project_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskStatusRead"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    createTaskStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                project_key: string;
+                board_key: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TaskStatusCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskStatusRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    getTaskStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                project_key: string;
-                status_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskStatusRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    deleteTaskStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                project_key: string;
-                status_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    updateTaskStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                workspace_slug: string;
-                project_key: string;
-                status_key: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TaskStatusUpdate"];
+                "application/json": components["schemas"]["BoardUpdate"];
             };
         };
         responses: {
@@ -2571,7 +2589,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TaskStatusRead"];
+                    "application/json": components["schemas"]["BoardRead"];
                 };
             };
             /** @description Validation Error */
@@ -2741,6 +2759,175 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LabelRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listProjectStatuses: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                project_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskStatusRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    createTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                project_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskStatusCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskStatusRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                project_key: string;
+                status_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskStatusRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deleteTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                project_key: string;
+                status_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updateTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                project_key: string;
+                status_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskStatusUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskStatusRead"];
                 };
             };
             /** @description Validation Error */
@@ -3343,13 +3530,29 @@ export interface operations {
             };
         };
     };
-    listBoards: {
+    searchWorkspace: {
         parameters: {
-            query?: never;
+            query?: {
+                q?: string | null;
+                type?: "all" | "workspaces" | "projects" | "tasks";
+                sort?: "relevance" | "updated_desc" | "created_desc" | "title_asc";
+                projectKey?: string | null;
+                statusKey?: string | null;
+                typeKey?: string | null;
+                priorityKey?: string | null;
+                labelKey?: string | null;
+                assigneeUserId?: string | null;
+                reporterUserId?: string | null;
+                createdAfter?: string | null;
+                createdBefore?: string | null;
+                updatedAfter?: string | null;
+                updatedBefore?: string | null;
+                limit?: number;
+                offset?: number;
+            };
             header?: never;
             path: {
                 workspace_slug: string;
-                project_key: string;
             };
             cookie?: never;
         };
@@ -3361,7 +3564,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoardRead"][];
+                    "application/json": components["schemas"]["SearchResultRead"];
                 };
             };
             /** @description Validation Error */
@@ -3375,19 +3578,49 @@ export interface operations {
             };
         };
     };
-    createBoard: {
+    listTaskPriorities: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                project_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskPriorityRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    createTaskPriority: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["BoardCreate"];
+                "application/json": components["schemas"]["TaskPriorityCreate"];
             };
         };
         responses: {
@@ -3397,7 +3630,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoardRead"];
+                    "application/json": components["schemas"]["TaskPriorityRead"];
                 };
             };
             /** @description Validation Error */
@@ -3411,14 +3644,13 @@ export interface operations {
             };
         };
     };
-    getBoard: {
+    getTaskPriority: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                project_key: string;
-                board_key: string;
+                priority_key: string;
             };
             cookie?: never;
         };
@@ -3430,7 +3662,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoardRead"];
+                    "application/json": components["schemas"]["TaskPriorityRead"];
                 };
             };
             /** @description Validation Error */
@@ -3444,14 +3676,13 @@ export interface operations {
             };
         };
     };
-    deleteBoard: {
+    deleteTaskPriority: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                project_key: string;
-                board_key: string;
+                priority_key: string;
             };
             cookie?: never;
         };
@@ -3475,20 +3706,19 @@ export interface operations {
             };
         };
     };
-    updateBoard: {
+    updateTaskPriority: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 workspace_slug: string;
-                project_key: string;
-                board_key: string;
+                priority_key: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["BoardUpdate"];
+                "application/json": components["schemas"]["TaskPriorityUpdate"];
             };
         };
         responses: {
@@ -3498,7 +3728,241 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoardRead"];
+                    "application/json": components["schemas"]["TaskPriorityRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listTaskTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskTypeRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    createTaskType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskTypeCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskTypeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getTaskType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                type_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskTypeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deleteTaskType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                type_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updateTaskType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_slug: string;
+                type_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskTypeUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskTypeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listWorkspaceTasks: {
+        parameters: {
+            query?: {
+                projectKey?: string | null;
+                statusKey?: string | null;
+                assigneeUserId?: string | null;
+                q?: string | null;
+            };
+            header?: never;
+            path: {
+                workspace_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolveTask: {
+        parameters: {
+            query: {
+                target: string;
+                projectKey?: string | null;
+            };
+            header?: never;
+            path: {
+                workspace_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskResolveResult"];
                 };
             };
             /** @description Validation Error */

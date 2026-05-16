@@ -1,6 +1,12 @@
 import { Command } from "commander";
 
-import { JetApi, type TaskCreate, type TaskRef, type TaskUpdate } from "../api/client.js";
+import {
+  JetApi,
+  type SearchSort,
+  type TaskCreate,
+  type TaskRef,
+  type TaskUpdate,
+} from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
 import { printTask, printTasks } from "../output/human.js";
 import { printJson } from "../output/json.js";
@@ -36,35 +42,63 @@ type TaskDoneOptions = {
   status?: string;
 };
 
+type TaskListOptions = {
+  status?: string;
+  type?: string;
+  priority?: string;
+  label?: string;
+  assignee?: string;
+  reporter?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  updatedAfter?: string;
+  updatedBefore?: string;
+  sort?: SearchSort;
+  limit?: string;
+  offset?: string;
+};
+
+type TaskSearchOptions = Parameters<JetApi["searchWorkspace"]>[0];
+
 export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Command {
   const command = new Command("task").description("List, create, inspect, update, and delete tasks");
 
   command
     .command("list")
     .description("List tasks in the active workspace, optionally narrowed by project")
-    .argument("[query]", "search task titles")
+    .argument("[query]", "search tasks across titles, descriptions, comments, references, labels, and metadata")
     .option("--status <key>", "only show tasks with this status key")
+    .option("--type <key>", "only show tasks with this type key")
+    .option("--priority <key>", "only show tasks with this priority key")
+    .option("--label <key>", "only show tasks with this label key")
     .option("--assignee <uuid>", "only show tasks assigned to this user ID")
+    .option("--reporter <uuid>", "only show tasks reported by this user ID")
+    .option("--created-after <datetime>", "only show tasks created at or after this ISO timestamp")
+    .option("--created-before <datetime>", "only show tasks created at or before this ISO timestamp")
+    .option("--updated-after <datetime>", "only show tasks updated at or after this ISO timestamp")
+    .option("--updated-before <datetime>", "only show tasks updated at or before this ISO timestamp")
+    .option("--sort <sort>", "sort by relevance, updated_desc, created_desc, or title_asc", "relevance")
+    .option("--limit <number>", "maximum tasks to return", "20")
+    .option("--offset <number>", "number of matching tasks to skip", "0")
     .action(
       async (
         query: string | undefined,
-        options: { status?: string; assignee?: string },
+        options: TaskListOptions,
       ) => {
         const { config } = await getContext();
         const api = new JetApi(requireApiConfig(config));
         const workspaceSlug = requireWorkspace(config.workspace);
-        const tasks = await api.listWorkspaceTasks({
+        const search = await api.searchWorkspace(buildTaskSearchOptions({
           workspaceSlug,
           projectKey: config.project,
-          statusKey: options.status,
-          assigneeUserId: options.assignee,
-          q: query,
-        });
+          query,
+          options,
+        }));
         if (config.output === "json") {
-          printJson(tasks);
+          printJson(search.tasks ?? []);
           return;
         }
-        printTasks(tasks);
+        printTasks(search.tasks ?? []);
       },
     );
 
@@ -245,6 +279,77 @@ function compactTaskCreate(body: TaskCreate): TaskCreate {
 
 function compactTaskUpdate(body: TaskUpdate): TaskUpdate {
   return compactObject(body) as TaskUpdate;
+}
+
+export function buildTaskSearchOptions({
+  workspaceSlug,
+  projectKey,
+  query,
+  options,
+}: {
+  workspaceSlug: string;
+  projectKey?: string;
+  query?: string;
+  options: TaskListOptions;
+}): TaskSearchOptions {
+  return {
+    workspaceSlug,
+    q: query,
+    type: "tasks",
+    sort: parseTaskListSort(options.sort),
+    projectKey,
+    statusKey: options.status,
+    typeKey: options.type,
+    priorityKey: options.priority,
+    labelKey: options.label,
+    assigneeUserId: options.assignee,
+    reporterUserId: options.reporter,
+    createdAfter: options.createdAfter,
+    createdBefore: options.createdBefore,
+    updatedAfter: options.updatedAfter,
+    updatedBefore: options.updatedBefore,
+    limit: parseNonNegativeInteger(options.limit, "limit", { min: 1, max: 100 }),
+    offset: parseNonNegativeInteger(options.offset, "offset"),
+  };
+}
+
+export function parseTaskListSort(value: string | undefined): SearchSort {
+  const sort = value ?? "relevance";
+  if (
+    sort === "relevance" ||
+    sort === "updated_desc" ||
+    sort === "created_desc" ||
+    sort === "title_asc"
+  ) {
+    return sort;
+  }
+  throw new CliUsageError(
+    "sort must be one of relevance, updated_desc, created_desc, or title_asc.",
+  );
+}
+
+function parseNonNegativeInteger(
+  value: string | undefined,
+  name: string,
+  bounds: { min?: number; max?: number } = {},
+): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed)) {
+    throw new CliUsageError(`${name} must be an integer.`);
+  }
+  if (bounds.min !== undefined && parsed < bounds.min) {
+    throw new CliUsageError(`${name} must be at least ${bounds.min}.`);
+  }
+  if (bounds.max !== undefined && parsed > bounds.max) {
+    throw new CliUsageError(`${name} must be at most ${bounds.max}.`);
+  }
+  if (bounds.min === undefined && parsed < 0) {
+    throw new CliUsageError(`${name} must be non-negative.`);
+  }
+  return parsed;
 }
 
 async function resolveTaskRef(

@@ -2,7 +2,12 @@ import { describe, expect, test } from "bun:test";
 
 import type { JetApi, Task } from "../api/client.js";
 import { CliUsageError } from "../resolution/task-target.js";
-import { resolveDoneStatus, resolveParentTaskRef } from "./task.js";
+import {
+  buildTaskSearchOptions,
+  parseTaskListSort,
+  resolveDoneStatus,
+  resolveParentTaskRef,
+} from "./task.js";
 
 describe("task command helpers", () => {
   test("resolves parent refs relative to the task being updated", async () => {
@@ -46,6 +51,54 @@ describe("task command helpers", () => {
     } as unknown as JetApi;
 
     await expect(resolveDoneStatus(api, "acme", "WEB")).rejects.toThrow(CliUsageError);
+  });
+
+  test("builds task search options from list filters and context", () => {
+    expect(
+      buildTaskSearchOptions({
+        workspaceSlug: "acme",
+        projectKey: "JET",
+        query: "login",
+        options: {
+          status: "open",
+          type: "bug",
+          priority: "high",
+          label: "backend",
+          assignee: "assignee-id",
+          reporter: "reporter-id",
+          createdAfter: "2026-05-01T00:00:00Z",
+          createdBefore: "2026-05-02T00:00:00Z",
+          updatedAfter: "2026-05-03T00:00:00Z",
+          updatedBefore: "2026-05-04T00:00:00Z",
+          sort: "title_asc",
+          limit: "25",
+          offset: "5",
+        },
+      }),
+    ).toEqual({
+      workspaceSlug: "acme",
+      q: "login",
+      type: "tasks",
+      sort: "title_asc",
+      projectKey: "JET",
+      statusKey: "open",
+      typeKey: "bug",
+      priorityKey: "high",
+      labelKey: "backend",
+      assigneeUserId: "assignee-id",
+      reporterUserId: "reporter-id",
+      createdAfter: "2026-05-01T00:00:00Z",
+      createdBefore: "2026-05-02T00:00:00Z",
+      updatedAfter: "2026-05-03T00:00:00Z",
+      updatedBefore: "2026-05-04T00:00:00Z",
+      limit: 25,
+      offset: 5,
+    });
+  });
+
+  test("validates task list sort before calling the API", () => {
+    expect(parseTaskListSort("updated_desc")).toBe("updated_desc");
+    expect(() => parseTaskListSort("bad-sort")).toThrow(CliUsageError);
   });
 });
 
