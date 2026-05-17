@@ -1081,6 +1081,7 @@ export interface components {
             labels?: components["schemas"]["TaskLabelRead"][];
             /** Number */
             number: number;
+            parent_task?: components["schemas"]["TaskSummaryRead"] | null;
             /** Parent Task Id */
             parent_task_id: string | null;
             /** Priority Id */
@@ -1209,6 +1210,7 @@ export interface components {
              * Format: uuid
              */
             source_task_id: string;
+            target_task?: components["schemas"]["TaskSummaryRead"] | null;
             /**
              * Target Task Id
              * Format: uuid
@@ -1300,6 +1302,7 @@ export interface components {
             labels?: components["schemas"]["TaskLabelRead"][];
             /** Number */
             number: number;
+            parent_task?: components["schemas"]["TaskSummaryRead"] | null;
             /** Parent Task Id */
             parent_task_id: string | null;
             /** Priority Id */
@@ -1448,6 +1451,27 @@ export interface components {
             name?: string | null;
             /** Rank */
             rank?: number | null;
+        };
+        /** TaskSummaryRead */
+        TaskSummaryRead: {
+            /** Display Ref */
+            display_ref?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Number */
+            number: number;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Project Key */
+            project_key?: string | null;
+            /** Title */
+            title: string;
         };
         /** TaskTypeCreate */
         TaskTypeCreate: {
@@ -3913,6 +3937,7 @@ export interface operations {
                 statusKey?: string | null;
                 assigneeUserId?: string | null;
                 q?: string | null;
+                limit?: number | null;
             };
             header?: never;
             path: {

@@ -950,6 +950,16 @@
             "title": "Number",
             "type": "integer"
           },
+          "parent_task": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskSummaryRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "parent_task_id": {
             "anyOf": [
               {
@@ -1321,6 +1331,16 @@
             "title": "Source Task Id",
             "type": "string"
           },
+          "target_task": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskSummaryRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "target_task_id": {
             "format": "uuid",
             "title": "Target Task Id",
@@ -1524,6 +1544,16 @@
           "number": {
             "title": "Number",
             "type": "integer"
+          },
+          "parent_task": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskSummaryRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "parent_task_id": {
             "anyOf": [
@@ -1934,6 +1964,58 @@
           }
         },
         "title": "TaskStatusUpdate",
+        "type": "object"
+      },
+      "TaskSummaryRead": {
+        "properties": {
+          "display_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Ref"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "integer"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "project_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Key"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "number",
+          "title"
+        ],
+        "title": "TaskSummaryRead",
         "type": "object"
       },
       "TaskTypeCreate": {
@@ -6986,6 +7068,24 @@
                 }
               ],
               "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
             }
           }
         ],
