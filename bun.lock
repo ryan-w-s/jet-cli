@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "jet-cli",
+      "name": "@just-easy-tasks/jet",
       "dependencies": {
         "commander": "^14.0.3",
         "openapi-fetch": "^0.17.0",

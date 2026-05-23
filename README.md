@@ -8,7 +8,7 @@ workflows short for humans and predictable for agents.
 ## Install
 
 ```sh
-npm install -g jet-cli
+npm install -g @just-easy-tasks/jet
 jet --help
 ```
 

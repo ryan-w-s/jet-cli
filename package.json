@@ -1,5 +1,5 @@
 {
-  "name": "jet-cli",
+  "name": "@just-easy-tasks/jet",
   "version": "0.1.0",
   "description": "Command line task management for Just Easy Tasks",
   "license": "MIT",
@@ -22,10 +22,13 @@
     "node": ">=22"
   },
   "bin": {
-    "jet": "./dist/jet.js"
+    "jet": "dist/jet.js"
   },
   "type": "module",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "bun run src/cli.ts",
     "test": "bun test",
