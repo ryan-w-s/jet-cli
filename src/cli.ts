@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { readFileSync } from "node:fs";
 import { Command } from "commander";
 
 import { JetApiError } from "./api/client.js";
@@ -38,7 +39,7 @@ export function createProgram(): Command {
   program
     .name("jet")
     .description("Manage Just Easy Tasks workspaces, projects, tasks, and metadata")
-    .version("0.1.0")
+    .version(readPackageVersion())
     .option("--api-url <url>", "API base URL")
     .option("--api-key <key>", "API key for X-API-Key authentication")
     .option("-w, --workspace <slug>", "workspace slug to use for this command")
@@ -68,6 +69,21 @@ export function createProgram(): Command {
   program.addCommand(createBoardCommand(getContext));
 
   return program;
+}
+
+function readPackageVersion(): string {
+  try {
+    const packageJsonUrl = new URL("../package.json", import.meta.url);
+    const packageJson = JSON.parse(readFileSync(packageJsonUrl, "utf8")) as {
+      version?: unknown;
+    };
+    if (typeof packageJson.version === "string" && packageJson.version) {
+      return packageJson.version;
+    }
+  } catch {
+    // Keep the CLI startable in unusual dev or packaged layouts.
+  }
+  return "0.0.0";
 }
 
 if (import.meta.main) {

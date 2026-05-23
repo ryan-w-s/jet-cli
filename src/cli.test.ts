@@ -1,6 +1,24 @@
 import { describe, expect, test } from "bun:test";
 
 describe("jet command", () => {
+  test("prints the current package version", async () => {
+    const packagePath = "package.json";
+    const originalPackageJson = await Bun.file(packagePath).text();
+    const packageJson = JSON.parse(originalPackageJson) as { version: string };
+    packageJson.version = "9.8.7-test";
+
+    try {
+      await Bun.write(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
+
+      const result = await runCli(["--version"]);
+
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout.trim()).toBe("9.8.7-test");
+    } finally {
+      await Bun.write(packagePath, originalPackageJson);
+    }
+  });
+
   test("lists the release command surface in help", async () => {
     const result = await runCli(["--help"]);
 
@@ -68,4 +86,3 @@ async function runCli(
   ]);
   return { exitCode, stdout, stderr };
 }
-

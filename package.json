@@ -24,7 +24,6 @@
   "bin": {
     "jet": "./dist/jet.js"
   },
-  "module": "src/cli.ts",
   "type": "module",
   "private": false,
   "scripts": {
