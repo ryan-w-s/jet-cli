@@ -40,7 +40,7 @@ export function createProgram(): Command {
     .name("jet")
     .description("Manage Just Easy Tasks workspaces, projects, tasks, and metadata")
     .version(readPackageVersion())
-    .option("--api-url <url>", "API base URL")
+    .option("--api-url <url>", "API base URL (defaults to https://justeasytasks.com)")
     .option("--api-key <key>", "API key for X-API-Key authentication")
     .option("-w, --workspace <slug>", "workspace slug to use for this command")
     .option("-p, --project <key>", "project key to use for this command")

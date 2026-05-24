@@ -32,8 +32,7 @@ jet use project JET
 jet auth status
 ```
 
-The CLI uses `https://justeasytasks.com` by default. To use another API, pass
-`--api-url`, set `JET_API_URL`, or run `jet config set api-url <url>`.
+The CLI uses `https://justeasytasks.com` by default.
 
 When the same setting is provided in multiple places, later sources override
 earlier ones:
