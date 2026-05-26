@@ -23,6 +23,7 @@ import {
   createLinkCommand,
   createReferenceCommand,
 } from "./commands/relations.js";
+import { createSkillsCommand } from "./commands/skills.js";
 import { createTaskCommand } from "./commands/task.js";
 import { createWorkspaceCommand } from "./commands/workspace.js";
 import { loadRuntimeContext, type GlobalOptions } from "./config/load.js";
@@ -67,6 +68,7 @@ export function createProgram(): Command {
   program.addCommand(createLinkCommand(getContext));
   program.addCommand(createReferenceCommand(getContext));
   program.addCommand(createBoardCommand(getContext));
+  program.addCommand(createSkillsCommand());
 
   return program;
 }

@@ -1,5 +1,10 @@
 const binary = process.env["JET_BINARY"] ?? "dist/jet.js";
 
+if (!(await Bun.file("skills/jet/SKILL.md").exists())) {
+  console.error("Bundled JET skill is missing: skills/jet/SKILL.md");
+  process.exit(1);
+}
+
 for (const args of [["--help"], ["context"]]) {
   const proc = Bun.spawn(["node", binary, ...args], {
     env: {

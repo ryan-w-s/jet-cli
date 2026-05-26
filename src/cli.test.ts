@@ -31,6 +31,7 @@ describe("jet command", () => {
     expect(result.stdout).toContain("link");
     expect(result.stdout).toContain("reference");
     expect(result.stdout).toContain("board");
+    expect(result.stdout).toContain("skills");
     expect(result.stdout).toContain("status");
     expect(result.stdout).toContain("label");
     expect(result.stdout).toContain("priority");
@@ -66,6 +67,24 @@ describe("jet command", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("--no-cache");
     expect(result.stdout).toContain("--refresh");
+  });
+
+  test("lists skills install command in help", async () => {
+    const result = await runCli(["skills", "--help"]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain("install");
+  });
+
+  test("lists forwarded npx skills options in install help", async () => {
+    const result = await runCli(["skills", "install", "--help"]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain("--agent");
+    expect(result.stdout).toContain("--global");
+    expect(result.stdout).toContain("--copy");
+    expect(result.stdout).toContain("--yes");
+    expect(result.stdout).toContain("--all");
   });
 });
 

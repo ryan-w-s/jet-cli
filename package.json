@@ -46,7 +46,8 @@
   "files": [
     "dist",
     "README.md",
-    "openapi.json"
+    "openapi.json",
+    "skills"
   ],
   "devDependencies": {
     "@types/bun": "^1.3.4",
