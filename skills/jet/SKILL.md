@@ -1,6 +1,6 @@
 ---
 name: jet
-description: "Use when an agent needs to work with Just Easy Tasks (JET) via the jet CLI or API: configure auth/context, find, create, update, complete, comment on, link, reference, or inspect tasks and project metadata."
+description: "Use when an agent needs to work with Just Easy Tasks (JET) via the jet CLI or API: configure API key/context, find, create, update, complete, comment on, link, reference, or inspect tasks and project metadata."
 ---
 
 # JET
@@ -15,7 +15,7 @@ Configure once per machine or project:
 jet config set api-key <key>
 jet use workspace <workspace-slug>
 jet use project <PROJECT>
-jet auth status
+jet task list
 ```
 
 `jet` defaults to `https://justeasytasks.com`. Override with `--api-url` or `JET_API_URL`. Settings can also come from `JET_API_KEY`, `JET_WORKSPACE`, `JET_PROJECT`, local `.jet/config.json`, or global config. Pass `--workspace` and `--project` to override implied context for one command.

@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { Command } from "commander";
 
 import { JetApiError } from "./api/client.js";
-import { createAuthCommand } from "./commands/auth.js";
 import { createCacheCommand } from "./commands/cache.js";
 import {
   createConfigCommand,
@@ -56,7 +55,6 @@ export function createProgram(): Command {
   program.addCommand(createUseCommand());
   program.addCommand(createContextCommand(getContext));
   program.addCommand(createCacheCommand(getContext));
-  program.addCommand(createAuthCommand(getContext));
   program.addCommand(createWorkspaceCommand(getContext));
   program.addCommand(createProjectCommand(getContext));
   program.addCommand(createTypeCommand(getContext));

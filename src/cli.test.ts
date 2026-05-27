@@ -23,6 +23,7 @@ describe("jet command", () => {
     const result = await runCli(["--help"]);
 
     expect(result.exitCode).toBe(0);
+    expect(result.stdout).not.toContain("\n  auth ");
     expect(result.stdout).toContain("workspace");
     expect(result.stdout).toContain("cache");
     expect(result.stdout).toContain("project");

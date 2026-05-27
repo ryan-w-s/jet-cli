@@ -29,7 +29,7 @@ tests, builds, and release checks.
 jet config set api-key jet_your_secret_here
 jet use workspace acme
 jet use project JET
-jet auth status
+jet task list
 ```
 
 The CLI uses `https://justeasytasks.com` by default.
@@ -84,10 +84,6 @@ Core commands:
 
 ```sh
 jet context
-jet auth status
-jet auth keys list
-jet auth keys create "Laptop"
-jet auth keys revoke <api-key-id> --force
 ```
 
 Workspace and project commands:
