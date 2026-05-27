@@ -10,7 +10,7 @@ Use `jet` to manage Just Easy Tasks. Prefer CLI commands over raw API calls unle
 
 ## Setup
 
-Install via `npm install -g @just-easy-tasks/jet-cli`.
+Install via `npm install -g @just-easy-tasks/jet`.
 
 Configure only once per machine or project:
 
