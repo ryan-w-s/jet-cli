@@ -1,5 +1,5 @@
 ---
-name: jet
+name: just-easy-tasks
 description: "Use when an agent needs to work with Just Easy Tasks (JET) via the jet CLI or API: configure API key/context, find, create, update, complete, comment on, link, reference, or inspect tasks and project metadata."
 version: 1.0.0
 ---
