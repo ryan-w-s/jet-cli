@@ -1,6 +1,7 @@
 ---
 name: jet
 description: "Use when an agent needs to work with Just Easy Tasks (JET) via the jet CLI or API: configure API key/context, find, create, update, complete, comment on, link, reference, or inspect tasks and project metadata."
+version: 1.0.0
 ---
 
 # JET
@@ -9,7 +10,9 @@ Use `jet` to manage Just Easy Tasks. Prefer CLI commands over raw API calls unle
 
 ## Setup
 
-Configure once per machine or project:
+Install via `npm install -g @just-easy-tasks/jet-cli`.
+
+Configure only once per machine or project:
 
 ```sh
 jet config set api-key <key>
