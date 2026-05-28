@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { buildSkillsAddArgs } from "./commands/skills";
 
 describe("jet command", () => {
   test("prints the current package version", async () => {
@@ -86,6 +87,16 @@ describe("jet command", () => {
     expect(result.stdout).toContain("--copy");
     expect(result.stdout).toContain("--yes");
     expect(result.stdout).toContain("--all");
+  });
+
+  test("installs the bundled skill by frontmatter name", () => {
+    expect(buildSkillsAddArgs("skills-dir")).toEqual([
+      "skills",
+      "add",
+      "skills-dir",
+      "--skill",
+      "just-easy-tasks",
+    ]);
   });
 });
 

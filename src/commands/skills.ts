@@ -12,6 +12,8 @@ type SkillsInstallOptions = {
   all?: boolean;
 };
 
+const bundledSkillName = "just-easy-tasks";
+
 export function createSkillsCommand(): Command {
   const command = new Command("skills").description("Install bundled JET agent skills");
 
@@ -47,7 +49,7 @@ export function buildSkillsAddArgs(
   skillsDir: string,
   options: SkillsInstallOptions = {},
 ): string[] {
-  const args = ["skills", "add", skillsDir, "--skill", "jet"];
+  const args = ["skills", "add", skillsDir, "--skill", bundledSkillName];
 
   for (const agent of options.agent ?? []) {
     args.push("--agent", agent);
