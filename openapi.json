@@ -156,6 +156,28 @@
       },
       "BillingPlanPriceRead": {
         "properties": {
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "formatted_amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formatted Amount"
+          },
           "interval_label": {
             "title": "Interval Label",
             "type": "string"
@@ -175,6 +197,17 @@
             ],
             "title": "Period",
             "type": "string"
+          },
+          "unit_amount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Amount"
           }
         },
         "required": [
@@ -275,6 +308,34 @@
           "has_stripe_customer": {
             "title": "Has Stripe Customer",
             "type": "boolean"
+          },
+          "pending_effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Effective At"
+          },
+          "pending_plan_tier": {
+            "anyOf": [
+              {
+                "enum": [
+                  "free",
+                  "personal",
+                  "pro"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Plan Tier"
           },
           "plan_tier": {
             "enum": [
@@ -472,6 +533,293 @@
           "period"
         ],
         "title": "CheckoutSessionCreate",
+        "type": "object"
+      },
+      "DataExportAPIKeyRead": {
+        "properties": {
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "key_prefix": {
+            "title": "Key Prefix",
+            "type": "string"
+          },
+          "last_used_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Used At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "key_prefix",
+          "is_active",
+          "last_used_at"
+        ],
+        "title": "DataExportAPIKeyRead",
+        "type": "object"
+      },
+      "DataExportMembershipRead": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "member"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "DataExportMembershipRead",
+        "type": "object"
+      },
+      "DataExportRead": {
+        "properties": {
+          "api_keys": {
+            "items": {
+              "$ref": "#/components/schemas/DataExportAPIKeyRead"
+            },
+            "title": "Api Keys",
+            "type": "array"
+          },
+          "billing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BillingSubscriptionRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exported_at": {
+            "format": "date-time",
+            "title": "Exported At",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserRead"
+          },
+          "workspaces": {
+            "items": {
+              "$ref": "#/components/schemas/DataExportWorkspaceRead"
+            },
+            "title": "Workspaces",
+            "type": "array"
+          }
+        },
+        "required": [
+          "exported_at",
+          "user"
+        ],
+        "title": "DataExportRead",
+        "type": "object"
+      },
+      "DataExportWorkspaceRead": {
+        "properties": {
+          "boards": {
+            "items": {
+              "$ref": "#/components/schemas/BoardRead"
+            },
+            "title": "Boards",
+            "type": "array"
+          },
+          "comments": {
+            "items": {
+              "$ref": "#/components/schemas/TaskCommentRead"
+            },
+            "title": "Comments",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "invites": {
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceInviteRead"
+            },
+            "title": "Invites",
+            "type": "array"
+          },
+          "labels": {
+            "items": {
+              "$ref": "#/components/schemas/LabelRead"
+            },
+            "title": "Labels",
+            "type": "array"
+          },
+          "links": {
+            "items": {
+              "$ref": "#/components/schemas/TaskLinkRead"
+            },
+            "title": "Links",
+            "type": "array"
+          },
+          "membership": {
+            "$ref": "#/components/schemas/DataExportMembershipRead"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ProjectRead"
+            },
+            "title": "Projects",
+            "type": "array"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/TaskReferenceRead"
+            },
+            "title": "References",
+            "type": "array"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/TaskStatusRead"
+            },
+            "title": "Statuses",
+            "type": "array"
+          },
+          "task_priorities": {
+            "items": {
+              "$ref": "#/components/schemas/TaskPriorityRead"
+            },
+            "title": "Task Priorities",
+            "type": "array"
+          },
+          "task_types": {
+            "items": {
+              "$ref": "#/components/schemas/TaskTypeRead"
+            },
+            "title": "Task Types",
+            "type": "array"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TaskRead"
+            },
+            "title": "Tasks",
+            "type": "array"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "created_at",
+          "updated_at",
+          "membership"
+        ],
+        "title": "DataExportWorkspaceRead",
+        "type": "object"
+      },
+      "DeleteMyAccountRead": {
+        "properties": {
+          "deleted_workspaces": {
+            "items": {
+              "$ref": "#/components/schemas/DeleteMyAccountWorkspaceRead"
+            },
+            "title": "Deleted Workspaces",
+            "type": "array"
+          },
+          "preserved_workspaces": {
+            "items": {
+              "$ref": "#/components/schemas/DeleteMyAccountWorkspaceRead"
+            },
+            "title": "Preserved Workspaces",
+            "type": "array"
+          }
+        },
+        "title": "DeleteMyAccountRead",
+        "type": "object"
+      },
+      "DeleteMyAccountRequest": {
+        "properties": {
+          "confirmation": {
+            "title": "Confirmation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "confirmation"
+        ],
+        "title": "DeleteMyAccountRequest",
+        "type": "object"
+      },
+      "DeleteMyAccountWorkspaceRead": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name"
+        ],
+        "title": "DeleteMyAccountWorkspaceRead",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -2715,6 +3063,47 @@
       }
     },
     "/api/me": {
+      "delete": {
+        "operationId": "deleteMyAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMyAccountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteMyAccountRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete My Account"
+      },
       "get": {
         "operationId": "getCurrentActor",
         "responses": {
@@ -2853,6 +3242,29 @@
           }
         ],
         "summary": "Revoke Api Key"
+      }
+    },
+    "/api/me/export": {
+      "get": {
+        "operationId": "exportMyData",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataExportRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Export My Data"
       }
     },
     "/api/search": {

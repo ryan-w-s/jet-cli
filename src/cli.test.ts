@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { buildSkillsAddArgs } from "./commands/skills";
+import { buildSkillsAddArgs } from "./commands/skills.js";
 
 describe("jet command", () => {
   test("prints the current package version", async () => {

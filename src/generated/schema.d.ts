@@ -78,7 +78,8 @@ export interface paths {
         get: operations["getCurrentActor"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete My Account */
+        delete: operations["deleteMyAccount"];
         options?: never;
         head?: never;
         patch?: never;
@@ -114,6 +115,23 @@ export interface paths {
         post?: never;
         /** Revoke Api Key */
         delete: operations["revokeApiKey"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export My Data */
+        get: operations["exportMyData"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -761,6 +779,10 @@ export interface components {
         };
         /** BillingPlanPriceRead */
         BillingPlanPriceRead: {
+            /** Currency */
+            currency?: string | null;
+            /** Formatted Amount */
+            formatted_amount?: string | null;
             /** Interval Label */
             interval_label: string;
             /** Is Configured */
@@ -772,6 +794,8 @@ export interface components {
              * @enum {string}
              */
             period: "month" | "year";
+            /** Unit Amount */
+            unit_amount?: number | null;
         };
         /** BillingPlanRead */
         BillingPlanRead: {
@@ -804,6 +828,10 @@ export interface components {
             current_period_start: string | null;
             /** Has Stripe Customer */
             has_stripe_customer: boolean;
+            /** Pending Effective At */
+            pending_effective_at?: string | null;
+            /** Pending Plan Tier */
+            pending_plan_tier?: ("free" | "personal" | "pro") | null;
             /**
              * Plan Tier
              * @enum {string}
@@ -881,6 +909,115 @@ export interface components {
              * @enum {string}
              */
             tier: "personal" | "pro";
+        };
+        /** DataExportAPIKeyRead */
+        DataExportAPIKeyRead: {
+            /** Is Active */
+            is_active: boolean;
+            /** Key Prefix */
+            key_prefix: string;
+            /** Last Used At */
+            last_used_at: string | null;
+            /** Name */
+            name: string;
+        };
+        /** DataExportMembershipRead */
+        DataExportMembershipRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "owner" | "member";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** DataExportRead */
+        DataExportRead: {
+            /** Api Keys */
+            api_keys?: components["schemas"]["DataExportAPIKeyRead"][];
+            billing?: components["schemas"]["BillingSubscriptionRead"] | null;
+            /**
+             * Exported At
+             * Format: date-time
+             */
+            exported_at: string;
+            user: components["schemas"]["UserRead"];
+            /** Workspaces */
+            workspaces?: components["schemas"]["DataExportWorkspaceRead"][];
+        };
+        /** DataExportWorkspaceRead */
+        DataExportWorkspaceRead: {
+            /** Boards */
+            boards?: components["schemas"]["BoardRead"][];
+            /** Comments */
+            comments?: components["schemas"]["TaskCommentRead"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Invites */
+            invites?: components["schemas"]["WorkspaceInviteRead"][];
+            /** Labels */
+            labels?: components["schemas"]["LabelRead"][];
+            /** Links */
+            links?: components["schemas"]["TaskLinkRead"][];
+            membership: components["schemas"]["DataExportMembershipRead"];
+            /** Name */
+            name: string;
+            /** Projects */
+            projects?: components["schemas"]["ProjectRead"][];
+            /** References */
+            references?: components["schemas"]["TaskReferenceRead"][];
+            /** Slug */
+            slug: string;
+            /** Statuses */
+            statuses?: components["schemas"]["TaskStatusRead"][];
+            /** Task Priorities */
+            task_priorities?: components["schemas"]["TaskPriorityRead"][];
+            /** Task Types */
+            task_types?: components["schemas"]["TaskTypeRead"][];
+            /** Tasks */
+            tasks?: components["schemas"]["TaskRead"][];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** DeleteMyAccountRead */
+        DeleteMyAccountRead: {
+            /** Deleted Workspaces */
+            deleted_workspaces?: components["schemas"]["DeleteMyAccountWorkspaceRead"][];
+            /** Preserved Workspaces */
+            preserved_workspaces?: components["schemas"]["DeleteMyAccountWorkspaceRead"][];
+        };
+        /** DeleteMyAccountRequest */
+        DeleteMyAccountRequest: {
+            /** Confirmation */
+            confirmation: string;
+        };
+        /** DeleteMyAccountWorkspaceRead */
+        DeleteMyAccountWorkspaceRead: {
+            /** Name */
+            name: string;
+            /** Slug */
+            slug: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1798,6 +1935,39 @@ export interface operations {
             };
         };
     };
+    deleteMyAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteMyAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteMyAccountRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     listApiKeys: {
         parameters: {
             query?: never;
@@ -1876,6 +2046,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    exportMyData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataExportRead"];
                 };
             };
         };
