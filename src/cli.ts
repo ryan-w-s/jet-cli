@@ -16,6 +16,7 @@ import {
   createStatusCommand,
   createTypeCommand,
 } from "./commands/metadata.js";
+import { createDoctorCommand } from "./commands/doctor.js";
 import { createProjectCommand } from "./commands/project.js";
 import {
   createBoardCommand,
@@ -54,6 +55,7 @@ export function createProgram(): Command {
   program.addCommand(createConfigCommand());
   program.addCommand(createUseCommand());
   program.addCommand(createContextCommand(getContext));
+  program.addCommand(createDoctorCommand(getContext));
   program.addCommand(createCacheCommand(getContext));
   program.addCommand(createWorkspaceCommand(getContext));
   program.addCommand(createProjectCommand(getContext));
@@ -120,7 +122,9 @@ async function handleError(error: unknown, program: Command): Promise<void> {
   }
 
   if (error instanceof CliUsageError) {
-    writeError("usage_error", error.message, json);
+    writeError(error.code, error.message, json, {
+      recovery: error.recovery,
+    });
     return;
   }
 
@@ -151,6 +155,9 @@ function writeError(
     return;
   }
   console.error(message);
+  if (typeof extra["recovery"] === "string") {
+    console.error(extra["recovery"]);
+  }
 }
 
 function formatApiError(error: JetApiError): string {

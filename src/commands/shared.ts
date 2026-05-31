@@ -6,6 +6,11 @@ export function requireApiConfig(config: JetConfig): JetApiOptions {
   if (!config.apiKey) {
     throw new CliUsageError(
       "API key is required. Pass --api-key <key>, set JET_API_KEY, or run `jet config set api-key <key>`.",
+      {
+        code: "missing_api_key",
+        recovery:
+          "Create an API key in the web app, then pass --api-key <key>, set JET_API_KEY, or run `jet config set api-key <key>`.",
+      },
     );
   }
   return {

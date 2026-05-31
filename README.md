@@ -27,8 +27,10 @@ tests, builds, and release checks.
 
 ```sh
 jet config set api-key jet_your_secret_here
+jet config set output json
 jet use workspace acme
 jet use project JET
+jet doctor
 jet task list
 ```
 
@@ -84,6 +86,7 @@ Core commands:
 
 ```sh
 jet context
+jet doctor
 ```
 
 Workspace and project commands:
@@ -145,6 +148,16 @@ jet --json task get JET-123
 jet --json task list --status open
 ```
 
+Run `doctor` before an agent changes work:
+
+```sh
+jet doctor --json
+```
+
+It checks API URL, API key auth, workspace access, project access, and whether
+JSON output is active. Failed checks include recovery guidance that an agent can
+follow or report.
+
 Errors in JSON mode include an `error` code and `message`; API errors also
 include HTTP `status` and backend `detail`.
 
@@ -188,3 +201,8 @@ bun run pack:check
 `smoke:api` is optional unless `JET_SMOKE_API_URL` and `JET_SMOKE_API_KEY` are
 set. When `JET_SMOKE_WORKSPACE` and `JET_SMOKE_PROJECT` are also set, it checks
 project-scoped task, status, label, and board endpoints.
+
+Set `JET_SMOKE_WRITE=1` with a staging workspace and project to run the full
+agent proof workflow: create temporary tasks, comment, attach a reference, link
+tasks, resolve/search, mark done when possible, and clean up the temporary
+tasks.

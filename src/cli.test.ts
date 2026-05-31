@@ -26,6 +26,7 @@ describe("jet command", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stdout).not.toContain("\n  auth ");
     expect(result.stdout).toContain("workspace");
+    expect(result.stdout).toContain("doctor");
     expect(result.stdout).toContain("cache");
     expect(result.stdout).toContain("project");
     expect(result.stdout).toContain("task");
@@ -60,6 +61,40 @@ describe("jet command", () => {
       workspace: "acme",
       project: "JET",
       output: "human",
+    });
+  });
+
+  test("prints structured JSON recovery for missing workspace context", async () => {
+    const result = await runCli([
+      "--json",
+      "--api-key",
+      "jet_secret",
+      "task",
+      "list",
+    ]);
+
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.stdout)).toEqual({
+      error: "missing_workspace",
+      message:
+        "Workspace is required. Pass --workspace <slug>, set JET_WORKSPACE, or run `jet use workspace <slug>`.",
+      recovery:
+        "Run `jet workspace list --json`, then `jet use workspace <slug>` or set JET_WORKSPACE.",
+    });
+  });
+
+  test("prints structured JSON recovery for missing API keys", async () => {
+    const result = await runCli(["--json", "workspace", "list"], {
+      JET_API_KEY: "",
+    });
+
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.stdout)).toEqual({
+      error: "missing_api_key",
+      message:
+        "API key is required. Pass --api-key <key>, set JET_API_KEY, or run `jet config set api-key <key>`.",
+      recovery:
+        "Create an API key in the web app, then pass --api-key <key>, set JET_API_KEY, or run `jet config set api-key <key>`.",
     });
   });
 

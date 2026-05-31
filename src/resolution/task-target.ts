@@ -1,9 +1,17 @@
 import type { JetApi, Task } from "../api/client.js";
 
 export class CliUsageError extends Error {
-  constructor(message: string) {
+  code: string;
+  recovery?: string;
+
+  constructor(
+    message: string,
+    options: { code?: string; recovery?: string } = {},
+  ) {
     super(message);
     this.name = "CliUsageError";
+    this.code = options.code ?? "usage_error";
+    this.recovery = options.recovery;
   }
 }
 
@@ -63,6 +71,11 @@ export function requireWorkspace(workspace: string | undefined): string {
   if (!workspace) {
     throw new CliUsageError(
       "Workspace is required. Pass --workspace <slug>, set JET_WORKSPACE, or run `jet use workspace <slug>`.",
+      {
+        code: "missing_workspace",
+        recovery:
+          "Run `jet workspace list --json`, then `jet use workspace <slug>` or set JET_WORKSPACE.",
+      },
     );
   }
   return workspace;
@@ -72,6 +85,11 @@ export function requireProject(project: string | undefined): string {
   if (!project) {
     throw new CliUsageError(
       "Project is required. Pass --project <key>, set JET_PROJECT, or run `jet use project <key>`.",
+      {
+        code: "missing_project",
+        recovery:
+          "Run `jet project list --json`, then `jet use project <key>` or set JET_PROJECT.",
+      },
     );
   }
   return project;
