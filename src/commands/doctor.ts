@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import { JetApi, JetApiError, type JetApiOptions } from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
+import { safeText } from "../output/human.js";
 import { printJson } from "../output/json.js";
 import { requireApiConfig } from "./shared.js";
 
@@ -204,6 +205,8 @@ function report(checks: DoctorCheck[]): DoctorReport {
 function printDoctorReport(value: DoctorReport): void {
   for (const check of value.checks) {
     const suffix = check.recovery ? ` ${check.recovery}` : "";
-    console.log(`${check.status.toUpperCase().padEnd(7)} ${check.name}: ${check.message}${suffix}`);
+    console.log(
+      `${check.status.toUpperCase().padEnd(7)} ${safeText(check.name)}: ${safeText(check.message)}${safeText(suffix)}`,
+    );
   }
 }

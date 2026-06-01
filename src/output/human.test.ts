@@ -33,6 +33,48 @@ describe("human output", () => {
 
     expect(lines).toEqual(['{"value":42}']);
   });
+
+  test("strips terminal control sequences from server-controlled task fields", () => {
+    const lines: string[] = [];
+    console.log = (...args: unknown[]) => {
+      lines.push(args.join(" "));
+    };
+
+    printTask({
+      ...makeTask(),
+      title: "\u001b[31mred title\u001b[0m",
+      description: "copy\u001b]52;c;YmFk\u0007text\rhidden",
+      labels: [{ key: "p0\u0008x", name: "P0", color: null }],
+    });
+
+    const output = lines.join("\n");
+    expect(output).toContain("JET-1 red title");
+    expect(output).toContain("copytext hidden");
+    expect(output).toContain("Labels: p0x");
+    expect(output).not.toContain("\u001b");
+    expect(output).not.toContain("\u0007");
+    expect(output).not.toContain("\u0008");
+  });
+
+  test("strips 8-bit C1 terminal control sequences from server-controlled task fields", () => {
+    const lines: string[] = [];
+    console.log = (...args: unknown[]) => {
+      lines.push(args.join(" "));
+    };
+
+    printTask({
+      ...makeTask(),
+      title: "\u009b31mred title\u009b0m",
+      description: "copy\u009d52;c;YmFk\u0007text",
+    });
+
+    const output = lines.join("\n");
+    expect(output).toContain("JET-1 red title");
+    expect(output).toContain("copytext");
+    expect(output).not.toContain("\u009b");
+    expect(output).not.toContain("\u009d");
+    expect(output).not.toContain("\u0007");
+  });
 });
 
 function makeTask(): Task {

@@ -2,7 +2,7 @@ import { Command } from "commander";
 
 import { JetApi } from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
-import { printComments, printRecord } from "../output/human.js";
+import { printComments, printRecord, safeText } from "../output/human.js";
 import { printJson } from "../output/json.js";
 import { resolveTaskTarget } from "../resolution/task-target.js";
 import {
@@ -55,7 +55,7 @@ export function createCommentCommand(getContext: () => Promise<RuntimeContext>):
         printJson(comment);
         return;
       }
-      console.log(comment.body);
+      console.log(safeText(comment.body));
     });
 
   command

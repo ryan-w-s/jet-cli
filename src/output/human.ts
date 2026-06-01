@@ -1,8 +1,19 @@
 import type { Project, Task, TaskComment, Workspace } from "../api/client.js";
 import { printJson } from "./json.js";
 
+const TERMINAL_ESCAPE_PATTERN =
+  /\u001b(?:\][^\u0007\u001b]*(?:\u0007|\u001b\\)|\[[0-?]*[ -/]*[@-~])|\u009d[^\u0007\u001b\u009c]*(?:\u0007|\u001b\\|\u009c)|\u009b[0-?]*[ -/]*[@-~]/g;
+const UNSAFE_CONTROL_PATTERN = /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]/g;
+
+export function safeText(value: unknown): string {
+  return String(value)
+    .replace(TERMINAL_ESCAPE_PATTERN, "")
+    .replace(UNSAFE_CONTROL_PATTERN, "")
+    .replace(/\r/g, " ");
+}
+
 export function taskRef(task: Task): string {
-  return task.display_ref ?? `${task.project_key ?? "TASK"}-${task.number}`;
+  return safeText(task.display_ref ?? `${task.project_key ?? "TASK"}-${task.number}`);
 }
 
 export function printWorkspaces(workspaces: Workspace[]): void {
@@ -11,7 +22,7 @@ export function printWorkspaces(workspaces: Workspace[]): void {
     return;
   }
   for (const workspace of workspaces) {
-    console.log(`${workspace.slug.padEnd(18)} ${workspace.name}`);
+    console.log(`${safeText(workspace.slug).padEnd(18)} ${safeText(workspace.name)}`);
   }
 }
 
@@ -21,7 +32,7 @@ export function printProjects(projects: Project[]): void {
     return;
   }
   for (const project of projects) {
-    console.log(`${project.key.padEnd(10)} ${project.name}`);
+    console.log(`${safeText(project.key).padEnd(10)} ${safeText(project.name)}`);
   }
 }
 
@@ -33,23 +44,23 @@ export function printTasks(tasks: Task[]): void {
   for (const task of tasks) {
     const taskLabels = task.labels ?? [];
     const labels = taskLabels.length > 0
-      ? ` [${taskLabels.map((label) => label.key).join(",")}]`
+      ? ` [${taskLabels.map((label) => safeText(label.key)).join(",")}]`
       : "";
-    console.log(`${taskRef(task).padEnd(12)} ${task.title}${labels}`);
+    console.log(`${taskRef(task).padEnd(12)} ${safeText(task.title)}${labels}`);
   }
 }
 
 export function printTask(task: Task): void {
-  console.log(`${taskRef(task)} ${task.title}`);
-  console.log(`Project: ${task.project_key ?? "unknown"}`);
+  console.log(`${taskRef(task)} ${safeText(task.title)}`);
+  console.log(`Project: ${safeText(task.project_key ?? "unknown")}`);
   if (task.description) {
     console.log("");
-    console.log(task.description);
+    console.log(safeText(task.description));
   }
   const taskLabels = task.labels ?? [];
   if (taskLabels.length > 0) {
     console.log("");
-    console.log(`Labels: ${taskLabels.map((label) => label.key).join(", ")}`);
+    console.log(`Labels: ${taskLabels.map((label) => safeText(label.key)).join(", ")}`);
   }
 }
 
@@ -59,14 +70,14 @@ export function printComments(comments: TaskComment[]): void {
     return;
   }
   for (const comment of comments) {
-    console.log(`${comment.created_at} ${comment.body}`);
+    console.log(`${safeText(comment.created_at)} ${safeText(comment.body)}`);
   }
 }
 
 export function printAmbiguousTask(target: string, candidates: Task[]): void {
-  console.error(`Task target "${target}" is ambiguous. Candidates:`);
+  console.error(`Task target ${safeText(target)} is ambiguous. Candidates:`);
   for (const candidate of candidates) {
-    console.error(`  ${taskRef(candidate)} ${candidate.title}`);
+    console.error(`  ${taskRef(candidate)} ${safeText(candidate.title)}`);
   }
 }
 
@@ -86,7 +97,7 @@ export function printRecord(record: Record<string, unknown>): void {
       continue;
     }
     const rendered = typeof value === "object" ? JSON.stringify(value) : String(value);
-    console.log(`${key}: ${rendered}`);
+    console.log(`${safeText(key)}: ${safeText(rendered)}`);
   }
 }
 
@@ -119,7 +130,7 @@ function recordSummary(record: Record<string, unknown>): string {
   const name = record["name"] ?? record["title"] ?? record["body"] ?? "";
   const suffix = name ? ` ${String(name)}` : "";
   if (key === undefined || key === null) {
-    return JSON.stringify(record);
+    return safeText(JSON.stringify(record));
   }
-  return `${String(key)}${suffix}`;
+  return safeText(`${String(key)}${suffix}`);
 }

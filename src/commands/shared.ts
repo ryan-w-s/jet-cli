@@ -1,5 +1,6 @@
 import type { JetApiOptions } from "../api/client.js";
 import { DEFAULT_API_URL, type JetConfig, type RuntimeContext } from "../config/load.js";
+import { safeText } from "../output/human.js";
 import { CliUsageError } from "../resolution/task-target.js";
 
 export function requireApiConfig(config: JetConfig): JetApiOptions {
@@ -34,7 +35,9 @@ export async function confirmDestructiveAction(
     return;
   }
   if (context.noInput) {
-    throw new CliUsageError(`${message} Confirmation is disabled by --no-input. Re-run with --force to confirm.`);
+    throw new CliUsageError(
+      `${safeText(message)} Confirmation is disabled by --no-input. Re-run with --force to confirm.`,
+    );
   }
 
   const { createInterface } = await import("node:readline/promises");
@@ -43,7 +46,7 @@ export async function confirmDestructiveAction(
     output: process.stderr,
   });
   try {
-    const answer = await readline.question(`${message} Type "yes" to continue: `);
+    const answer = await readline.question(`${safeText(message)} Type "yes" to continue: `);
     if (answer.trim().toLowerCase() !== "yes") {
       throw new CliUsageError("Operation cancelled.");
     }
@@ -74,5 +77,5 @@ export function printDeleted(config: JetConfig, resource: string, id: string): v
     console.log(JSON.stringify({ deleted: true, resource, id }, null, 2));
     return;
   }
-  console.log(`Deleted ${resource} ${id}`);
+  console.log(`Deleted ${safeText(resource)} ${safeText(id)}`);
 }

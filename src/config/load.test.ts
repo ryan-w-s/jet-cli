@@ -94,7 +94,7 @@ describe("mergeConfigSources", () => {
 });
 
 describe("sanitizeLocalConfig", () => {
-  test("allows local API URLs for loopback and private development hosts", () => {
+  test("allows local API URLs for loopback and private development hosts when a local key is also provided", () => {
     const urls = [
       "http://localhost:8000",
       "http://127.0.0.1:8000",
@@ -107,11 +107,25 @@ describe("sanitizeLocalConfig", () => {
 
     for (const apiUrl of urls) {
       expect(isTrustedLocalApiUrl(apiUrl)).toBe(true);
-      expect(sanitizeLocalConfig({ apiUrl, workspace: "acme" })).toEqual({
+      expect(sanitizeLocalConfig({ apiUrl, apiKey: "local-key", workspace: "acme" })).toEqual({
         apiUrl,
+        apiKey: "local-key",
         workspace: "acme",
       });
     }
+  });
+
+  test("drops local API URLs that would otherwise reuse a user or environment API key", () => {
+    expect(
+      sanitizeLocalConfig({
+        apiUrl: "http://127.0.0.1:8000",
+        workspace: "acme",
+        project: "JET",
+      }),
+    ).toEqual({
+      workspace: "acme",
+      project: "JET",
+    });
   });
 
   test("ignores public local API URLs while preserving non-network settings", () => {

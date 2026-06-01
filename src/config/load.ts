@@ -151,7 +151,11 @@ export function mergeConfigSources(...sources: JetConfig[]): JetConfig {
 }
 
 export function sanitizeLocalConfig(config: JetConfig): JetConfig {
-  if (config.apiUrl === undefined || isTrustedLocalApiUrl(config.apiUrl)) {
+  if (config.apiUrl === undefined) {
+    return config;
+  }
+
+  if (isTrustedLocalApiUrl(config.apiUrl) && config.apiKey !== undefined) {
     return config;
   }
 

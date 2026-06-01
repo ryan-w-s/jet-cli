@@ -27,7 +27,7 @@ import { createSkillsCommand } from "./commands/skills.js";
 import { createTaskCommand } from "./commands/task.js";
 import { createWorkspaceCommand } from "./commands/workspace.js";
 import { loadRuntimeContext, type GlobalOptions } from "./config/load.js";
-import { printAmbiguousTask } from "./output/human.js";
+import { printAmbiguousTask, safeText } from "./output/human.js";
 import { printJson } from "./output/json.js";
 import {
   AmbiguousTaskError,
@@ -154,9 +154,9 @@ function writeError(
     printJson({ error: code, message, ...extra });
     return;
   }
-  console.error(message);
+  console.error(safeText(message));
   if (typeof extra["recovery"] === "string") {
-    console.error(extra["recovery"]);
+    console.error(safeText(extra["recovery"]));
   }
 }
 

@@ -8,7 +8,7 @@ import {
   type TaskUpdate,
 } from "../api/client.js";
 import type { RuntimeContext } from "../config/load.js";
-import { printTask, printTasks } from "../output/human.js";
+import { printTask, printTasks, safeText } from "../output/human.js";
 import { printJson } from "../output/json.js";
 import {
   CliUsageError,
@@ -267,7 +267,7 @@ export function createTaskCommand(getContext: () => Promise<RuntimeContext>): Co
         printJson({ deleted: true, ref: resolved.task.display_ref });
         return;
       }
-      console.log(`Deleted ${resolved.task.display_ref ?? target}`);
+      console.log(`Deleted ${safeText(resolved.task.display_ref ?? target)}`);
     });
 
   return command;
