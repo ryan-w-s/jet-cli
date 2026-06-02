@@ -26,6 +26,20 @@ export type DestructiveOptions = {
   force?: boolean;
 };
 
+export function assertAdminCommandsEnabled(context: RuntimeContext): void {
+  if (context.adminCommandsEnabled) {
+    return;
+  }
+  throw new CliUsageError(
+    "Admin CLI commands are disabled by default because this command can change shared workspace/project setup, membership, or workflow configuration.",
+    {
+      code: "admin_commands_disabled",
+      recovery:
+        "Re-run with --dangerously-enable-admin-commands only if you intentionally want to administer JET from this CLI. Agents and scripts should usually avoid this flag.",
+    },
+  );
+}
+
 export async function confirmDestructiveAction(
   context: RuntimeContext,
   options: DestructiveOptions,

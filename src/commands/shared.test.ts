@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import { CliUsageError } from "../resolution/task-target.js";
 import {
+  assertAdminCommandsEnabled,
   compactObject,
   confirmDestructiveAction,
   parseJsonObject,
@@ -64,6 +65,7 @@ describe("shared command helpers", () => {
         {
           config: {},
           noInput: true,
+          adminCommandsEnabled: false,
         },
         {},
         "Delete task JET-1?",
@@ -75,10 +77,29 @@ describe("shared command helpers", () => {
         {
           config: {},
           noInput: true,
+          adminCommandsEnabled: false,
         },
         { force: true },
         "Delete task JET-1?",
       ),
     ).resolves.toBeUndefined();
+  });
+
+  test("requires explicit opt-in for admin commands", () => {
+    expect(() =>
+      assertAdminCommandsEnabled({
+        config: {},
+        noInput: false,
+        adminCommandsEnabled: false,
+      }),
+    ).toThrow("Admin CLI commands are disabled by default");
+
+    expect(() =>
+      assertAdminCommandsEnabled({
+        config: {},
+        noInput: false,
+        adminCommandsEnabled: true,
+      }),
+    ).not.toThrow();
   });
 });

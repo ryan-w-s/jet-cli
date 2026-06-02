@@ -48,7 +48,11 @@ export function createProgram(): Command {
     .option("--json", "print JSON for scripts and agents")
     .option("--no-cache", "skip cache reads and writes")
     .option("--refresh", "fetch fresh data and update cache entries")
-    .option("--no-input", "fail instead of prompting for confirmation");
+    .option("--no-input", "fail instead of prompting for confirmation")
+    .option(
+      "--dangerously-enable-admin-commands",
+      "allow CLI commands that mutate shared workspace/project administration",
+    );
 
   const getContext = () => loadRuntimeContext(rootOptions(program));
 

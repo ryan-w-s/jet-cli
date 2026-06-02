@@ -106,6 +106,72 @@ describe("jet command", () => {
     expect(result.stdout).toContain("--refresh");
   });
 
+  test("lists admin opt-in flag in help", async () => {
+    const result = await runCli(["--help"]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain("--dangerously-enable-admin-commands");
+  });
+
+  test("blocks admin mutations without explicit opt-in", async () => {
+    const result = await runCli([
+      "--json",
+      "--api-key",
+      "jet_secret",
+      "workspace",
+      "create",
+      "acme",
+      "Acme",
+    ]);
+
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.stdout)).toEqual({
+      error: "admin_commands_disabled",
+      message:
+        "Admin CLI commands are disabled by default because this command can change shared workspace/project setup, membership, or workflow configuration.",
+      recovery:
+        "Re-run with --dangerously-enable-admin-commands only if you intentionally want to administer JET from this CLI. Agents and scripts should usually avoid this flag.",
+    });
+  });
+
+  test("allows admin mutations to reach API layer with explicit opt-in", async () => {
+    const result = await runCli([
+      "--json",
+      "--api-url",
+      "https://127.0.0.1:1",
+      "--api-key",
+      "jet_secret",
+      "--dangerously-enable-admin-commands",
+      "workspace",
+      "create",
+      "acme",
+      "Acme",
+    ]);
+
+    expect(result.exitCode).toBe(1);
+    const error = JSON.parse(result.stdout) as { error: string };
+    expect(error.error).not.toBe("admin_commands_disabled");
+  });
+
+  test("does not require admin opt-in for normal task commands", async () => {
+    const result = await runCli([
+      "--json",
+      "--api-key",
+      "jet_secret",
+      "task",
+      "list",
+    ]);
+
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.stdout)).toEqual({
+      error: "missing_workspace",
+      message:
+        "Workspace is required. Pass --workspace <slug>, set JET_WORKSPACE, or run `jet use workspace <slug>`.",
+      recovery:
+        "Run `jet workspace list --json`, then `jet use workspace <slug>` or set JET_WORKSPACE.",
+    });
+  });
+
   test("lists skills install command in help", async () => {
     const result = await runCli(["skills", "--help"]);
 

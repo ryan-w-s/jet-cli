@@ -6,6 +6,7 @@ import { printRecordList, printRecordValue, printWorkspaces } from "../output/hu
 import { printJson } from "../output/json.js";
 import { requireWorkspace } from "../resolution/task-target.js";
 import {
+  assertAdminCommandsEnabled,
   compactObject,
   confirmDestructiveAction,
   printDeleted,
@@ -48,7 +49,9 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
     .argument("<name>", "workspace name")
     .option("--description <text>", "workspace description")
     .action(async (slug: string, name: string, options: { description?: string }) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       const workspace = await api.createWorkspace({
         slug,
@@ -65,7 +68,9 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
     .option("--name <name>", "new workspace name")
     .option("--description <text>", "new workspace description")
     .action(async (slug: string | undefined, options: WorkspaceUpdateOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       const workspace = await api.updateWorkspace({
         workspaceSlug: slug ?? requireWorkspace(config.workspace),
@@ -84,6 +89,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
     .option("--force", "delete without prompting")
     .action(async (slug: string | undefined, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       const workspaceSlug = slug ?? requireWorkspace(config.workspace);
@@ -119,6 +125,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
         options: DestructiveOptions,
       ) => {
         const context = await getContext();
+        assertAdminCommandsEnabled(context);
         const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const workspaceSlug = workspace ?? requireWorkspace(config.workspace);
@@ -170,7 +177,9 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
         workspace: string | undefined,
         options: { role: "owner" | "member" },
       ) => {
-        const { config } = await getContext();
+        const context = await getContext();
+        assertAdminCommandsEnabled(context);
+        const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const invite = await api.createWorkspaceInvite({
           workspaceSlug: workspace ?? requireWorkspace(config.workspace),
@@ -193,6 +202,7 @@ export function createWorkspaceCommand(getContext: () => Promise<RuntimeContext>
         options: DestructiveOptions,
       ) => {
         const context = await getContext();
+        assertAdminCommandsEnabled(context);
         const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const workspaceSlug = workspace ?? requireWorkspace(config.workspace);

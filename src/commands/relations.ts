@@ -11,6 +11,7 @@ import {
   type TaskCoordinates,
 } from "../resolution/task-target.js";
 import {
+  assertAdminCommandsEnabled,
   compactObject,
   confirmDestructiveAction,
   parseJsonObject,
@@ -209,9 +210,10 @@ export function createBoardCommand(getContext: () => Promise<RuntimeContext>): C
         name: string,
         options: { description?: string; filters?: string },
       ) => {
-        const { api, config, workspaceSlug, projectKey } = await projectContext(
-          getContext,
-        );
+        const context = await getContext();
+        assertAdminCommandsEnabled(context);
+        const { api, config, workspaceSlug, projectKey } =
+          await projectContextFromContext(context);
         printOne(
           config.output,
           await api.createBoard({
@@ -240,9 +242,10 @@ export function createBoardCommand(getContext: () => Promise<RuntimeContext>): C
         boardKey: string,
         options: { name?: string; description?: string; filters?: string },
       ) => {
-        const { api, config, workspaceSlug, projectKey } = await projectContext(
-          getContext,
-        );
+        const context = await getContext();
+        assertAdminCommandsEnabled(context);
+        const { api, config, workspaceSlug, projectKey } =
+          await projectContextFromContext(context);
         printOne(
           config.output,
           await api.updateBoard({
@@ -269,6 +272,7 @@ export function createBoardCommand(getContext: () => Promise<RuntimeContext>): C
     .option("--force", "delete without prompting")
     .action(async (boardKey: string, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { api, config, workspaceSlug, projectKey } = await projectContextFromContext(
         context,
       );

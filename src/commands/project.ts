@@ -6,6 +6,7 @@ import { printProjects, printRecordValue } from "../output/human.js";
 import { printJson } from "../output/json.js";
 import { requireProject, requireWorkspace } from "../resolution/task-target.js";
 import {
+  assertAdminCommandsEnabled,
   compactObject,
   confirmDestructiveAction,
   printDeleted,
@@ -61,7 +62,9 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
         workspace: string | undefined,
         options: { description?: string },
       ) => {
-        const { config } = await getContext();
+        const context = await getContext();
+        assertAdminCommandsEnabled(context);
+        const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const record = await api.createProject({
           workspaceSlug: requireWorkspace(workspace ?? config.workspace),
@@ -84,7 +87,9 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
         workspace: string | undefined,
         options: { name?: string; description?: string },
       ) => {
-        const { config } = await getContext();
+        const context = await getContext();
+        assertAdminCommandsEnabled(context);
+        const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const record = await api.updateProject({
           workspaceSlug: requireWorkspace(workspace ?? config.workspace),
@@ -111,6 +116,7 @@ export function createProjectCommand(getContext: () => Promise<RuntimeContext>):
         options: DestructiveOptions,
       ) => {
         const context = await getContext();
+        assertAdminCommandsEnabled(context);
         const { config } = context;
         const api = new JetApi(requireApiConfig(config));
         const workspaceSlug = requireWorkspace(workspace ?? config.workspace);

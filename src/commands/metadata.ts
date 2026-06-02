@@ -5,6 +5,7 @@ import type { RuntimeContext } from "../config/load.js";
 import { printRecordList, printRecordValue } from "../output/human.js";
 import { requireProject, requireWorkspace } from "../resolution/task-target.js";
 import {
+  assertAdminCommandsEnabled,
   compactObject,
   confirmDestructiveAction,
   printDeleted,
@@ -63,7 +64,9 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
     .argument("<name>", "task type name")
     .option("--description <text>", "task type description")
     .action(async (key: string, name: string, options: NamedOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -81,7 +84,9 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
     .option("--name <name>", "new task type name")
     .option("--description <text>", "new task type description")
     .action(async (typeKey: string, options: NamedOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -103,6 +108,7 @@ export function createTypeCommand(getContext: () => Promise<RuntimeContext>): Co
     .option("--force", "delete without prompting")
     .action(async (typeKey: string, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       await confirmDestructiveAction(context, options, `Delete task type ${typeKey}?`);
@@ -148,7 +154,9 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
     .argument("<name>", "priority name")
     .option("--rank <number>", "sort rank", "0")
     .action(async (key: string, name: string, options: { rank: string }) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -166,7 +174,9 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
     .option("--name <name>", "new priority name")
     .option("--rank <number>", "new sort rank")
     .action(async (priorityKey: string, options: RankedOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -188,6 +198,7 @@ export function createPriorityCommand(getContext: () => Promise<RuntimeContext>)
     .option("--force", "delete without prompting")
     .action(async (priorityKey: string, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       await confirmDestructiveAction(
@@ -245,7 +256,9 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
     .option("--category <category>", "status category, such as open or done")
     .option("--rank <number>", "sort rank", "0")
     .action(async (key: string, name: string, options: Required<StatusOptions>) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -270,7 +283,9 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
     .option("--category <category>", "new status category")
     .option("--rank <number>", "new sort rank")
     .action(async (statusKey: string, options: StatusOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -294,6 +309,7 @@ export function createStatusCommand(getContext: () => Promise<RuntimeContext>): 
     .option("--force", "delete without prompting")
     .action(async (statusKey: string, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       await confirmDestructiveAction(context, options, `Delete task status ${statusKey}?`);
@@ -347,7 +363,9 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
     .argument("<name>", "label name")
     .option("--color <color>", "label color name or value")
     .action(async (key: string, name: string, options: LabelOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -366,7 +384,9 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
     .option("--name <name>", "new label name")
     .option("--color <color>", "new label color")
     .action(async (labelKey: string, options: LabelOptions) => {
-      const { config } = await getContext();
+      const context = await getContext();
+      assertAdminCommandsEnabled(context);
+      const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       printOne(
         config.output,
@@ -389,6 +409,7 @@ export function createLabelCommand(getContext: () => Promise<RuntimeContext>): C
     .option("--force", "delete without prompting")
     .action(async (labelKey: string, options: DestructiveOptions) => {
       const context = await getContext();
+      assertAdminCommandsEnabled(context);
       const { config } = context;
       const api = new JetApi(requireApiConfig(config));
       await confirmDestructiveAction(context, options, `Delete label ${labelKey}?`);

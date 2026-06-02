@@ -138,5 +138,6 @@ function makeContext(
       ...overrides,
     },
     noInput: true,
+    adminCommandsEnabled: false,
   };
 }

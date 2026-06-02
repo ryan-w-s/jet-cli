@@ -19,6 +19,7 @@ export type GlobalOptions = {
   project?: string;
   json?: boolean;
   noInput?: boolean;
+  dangerouslyEnableAdminCommands?: boolean;
   cache?: boolean;
   refresh?: boolean;
 };
@@ -26,6 +27,7 @@ export type GlobalOptions = {
 export type RuntimeContext = {
   config: JetConfig;
   noInput: boolean;
+  adminCommandsEnabled: boolean;
 };
 
 export const DEFAULT_API_URL = "https://justeasytasks.com";
@@ -60,6 +62,7 @@ export async function loadRuntimeContext(
       cliConfig,
     ),
     noInput: options.noInput ?? false,
+    adminCommandsEnabled: options.dangerouslyEnableAdminCommands ?? false,
   };
 }
 
