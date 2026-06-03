@@ -34,6 +34,8 @@ jet --json --no-input task get JET-123
 
 Use `--refresh` when stale cached metadata is possible. Use `--no-cache` to bypass cache. Destructive commands prompt by default; pass `--force` when the user clearly requested deletion/revocation.
 
+Admin mutation commands require `--dangerously-enable-admin-commands`. This flag allows changing shared workspace/project setup, membership/invites, boards, labels, statuses, task types, and priorities. Only use it when the user explicitly asks you to administer those shared settings; do not infer it from ordinary task work.
+
 ## Task Targets
 
 Task targets may be:
