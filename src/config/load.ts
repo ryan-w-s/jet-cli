@@ -43,7 +43,7 @@ export async function loadRuntimeContext(
     readLocalConfig(),
   ]);
   const envConfig = readEnvConfig();
-  const cliConfig: JetConfig = {
+  const cliConfig = compactConfig({
     apiUrl: options.apiUrl,
     apiKey: options.apiKey,
     workspace: options.workspace,
@@ -51,7 +51,7 @@ export async function loadRuntimeContext(
     output: options.json ? "json" : undefined,
     cache: options.cache === false ? "off" : undefined,
     cacheRefresh: options.refresh ? true : undefined,
-  };
+  });
 
   return {
     config: mergeConfigSources(

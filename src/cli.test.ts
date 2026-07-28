@@ -1,4 +1,8 @@
 import { describe, expect, test } from "bun:test";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
 import { buildSkillsAddArgs } from "./commands/skills.js";
 
 describe("jet command", () => {
@@ -62,6 +66,61 @@ describe("jet command", () => {
       project: "JET",
       output: "human",
     });
+  });
+
+  test("uses API settings from environment variables when CLI flags are absent", async () => {
+    const result = await runCli(["context"], {
+      JET_API_URL: "https://env.example.test",
+      JET_API_KEY: "jet_env_secret",
+      JET_WORKSPACE: "env-workspace",
+      JET_PROJECT: "ENV",
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual({
+      apiUrl: "https://env.example.test",
+      hasApiKey: true,
+      workspace: "env-workspace",
+      project: "ENV",
+      output: "human",
+    });
+  });
+
+  test("uses API settings from the saved user config when CLI flags are absent", async () => {
+    const configHome = await mkdtemp(join(tmpdir(), "jet-cli-user-config-"));
+    const configDir = join(configHome, "jet");
+    await mkdir(configDir);
+    await writeFile(
+      join(configDir, "config.json"),
+      `${JSON.stringify({
+        apiUrl: "https://config.example.test",
+        apiKey: "jet_config_secret",
+        workspace: "config-workspace",
+        project: "CONFIG",
+      })}\n`,
+    );
+
+    try {
+      const result = await runCli(["context"], {
+        APPDATA: configHome,
+        XDG_CONFIG_HOME: configHome,
+        JET_API_URL: "",
+        JET_API_KEY: "",
+        JET_WORKSPACE: "",
+        JET_PROJECT: "",
+      });
+
+      expect(result.exitCode).toBe(0);
+      expect(JSON.parse(result.stdout)).toEqual({
+        apiUrl: "https://config.example.test",
+        hasApiKey: true,
+        workspace: "config-workspace",
+        project: "CONFIG",
+        output: "human",
+      });
+    } finally {
+      await rm(configHome, { recursive: true });
+    }
   });
 
   test("prints structured JSON recovery for missing workspace context", async () => {
